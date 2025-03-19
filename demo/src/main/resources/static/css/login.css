@@ -1,0 +1,12 @@
+.logo-container {
+  display: flex;
+  align-items: center; /* Alinea verticalmente */
+  justify-content: flex-start; /* Alinea a la izquierda */
+  gap: 5px; /* Espacio entre el logo y el texto */
+}
+
+.logo-svg {
+  margin-top: 0%;
+  width: 520px; /* Ajusta el tamaño del logo */
+  height: auto;
+}
