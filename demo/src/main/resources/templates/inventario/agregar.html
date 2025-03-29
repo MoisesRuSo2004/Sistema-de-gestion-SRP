@@ -31,6 +31,10 @@
 
     <!--CSS PERSONALIZADO-->
     <link rel="stylesheet" href="css/dashboard.css" />
+
+    <!--CSS PARA ALERTA DE INSUMO AGREGADO-->
+    <link rel="stylesheet" href="css/alerta-agre-insumo.css" />
+
   </head>
 
   <body id="page-top">
@@ -339,7 +343,28 @@
                 Puedes editar o actualizar la información más adelante si es necesario. 
               </p>
             </div>
-
+             <!-- Fondo oscuro -->
+              <div id="overlay"></div>
+              <!-- 🔔 ALERTA DE ÉXITO -->
+              <div id="alertaExito" class="card d-none">
+                <button class="dismiss" type="button">×</button>
+                <div class="header">
+                  <div class="image">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <g id="SVGRepo_iconCarrier">
+                        <path d="M20 7L9.00004 18L3.99994 13" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                      </g>
+                    </svg>
+                  </div>
+                  <div class="content">
+                    <span class="title">¡Insumo registrado!</span>
+                    <p class="message">El insumo ha sido agregado correctamente.</p>
+                  </div>
+                  <div class="actions">
+                    <button class="track" type="button">Ok</button>
+                  </div>
+                </div>
+              </div>
             <!--FORMULARIO-->
             <div class="p-4">
                 <form id="insumoForm" class="needs-validation" novalidate>
@@ -347,7 +372,7 @@
                         <!-- Nombre del insumo -->
                         <div class="col-md-6">
                             <label for="nombreInsumo" class="form-label required">Nombre del insumo</label>
-                            <input type="text" class="form-control" id="nombreInsumo" required>
+                            <input type="text" class="form-control" id="nombre" required>
                             <div class="invalid-feedback">
                                 Por favor ingrese el nombre del insumo.
                             </div>
@@ -364,7 +389,7 @@
                         <!-- Unidad de medida -->
                         <div class="col-md-3 mb-5">
                             <label for="unidadMedida" class="form-label required">Unidad de medida</label>
-                            <select class="col-11 mb-3 form-select" id="unidadMedida" required>
+                            <select class="col-11 mb-3 form-select" id="unidadM" required>
                                 <option value="" selected disabled>Seleccione una unidad</option>
                                 <option value="unidades">Unidades</option>
                                 <option value="kg">Kilogramos</option>
@@ -389,7 +414,7 @@
                               <button type="button" class="btn btn-outline-secondary" id="btnLimpiar">
                                   <i class="fas fa-eraser"></i> Limpiar formulario
                               </button>
-                              <button type="submit" class="btn btn-primary">
+                              <button type="submit" id="btnGuardar" class="btn btn-primary">
                                   <i class="fas fa-save me-1"></i> Guardar
                               </button>
                           </div>
@@ -467,7 +492,7 @@
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>
 
-    <!--script Perzonalizado-->
-    <script src="js/inventario/agregar.js"></script>
+    <!--script Perzonalizado agregar fetch-->
+    <script src="js/agregar-insumo.js"></script>
   </body>
 </html>

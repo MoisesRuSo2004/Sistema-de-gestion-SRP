@@ -10,17 +10,12 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
 
-    <title>SB Admin 2 - Dashboard</title> 
+    <title>Gestion De Inventario - Dashboard</title>
 
     <!--FAVICON-->
-    <link
-      rel="icon"
-      type="image/png"
-      href="/GESTION INVENTARIO 5TO/img/icons8-coser-16.png"
-    />
+    <link rel="icon" type="image/png" href="/img/icons8-coser-16.png" />
 
     <!-- Custom fonts for this template-->
-
     <link
       href="vendor/fontawesome-free/css/all.min.css"
       rel="stylesheet"
@@ -36,6 +31,10 @@
 
     <!--CSS PERSONALIZADO-->
     <link rel="stylesheet" href="css/dashboard.css" />
+
+    <!--CSS PARA ALERTA DE INSUMO AGREGADO-->
+    <link rel="stylesheet" href="css/alerta-agre-insumo.css" />
+
   </head>
 
   <body id="page-top">
@@ -53,10 +52,7 @@
         >
           <div class="sidebar-brand-icon">
             <i class="logotipo">
-              <img
-                src="/GESTION INVENTARIO 5TO/img/logotipo.svg"
-                class=""
-                alt=""
+              <img src="/img/logotipo.svg" class="" alt=""
             /></i>
           </div>
           <div class="sidebar-brand-text mx-3">SDGDI <sup>2.0</sup></div>
@@ -151,7 +147,7 @@
                 <input
                   type="text"
                   class="form-control bg-light border-0 small"
-                  placeholder="Search for..."
+                  placeholder="Buscar..."
                   aria-label="Search"
                   aria-describedby="basic-addon2"
                 />
@@ -323,19 +319,117 @@
           </nav>
           <!-- End of Topbar -->
 
+          <!-- AQUI VA EL CONTENIDO DE LA PAGINA -->
           <!-- Begin Page Content -->
           <div class="container-fluid">
-
-
-            <!--AQUI VA EL CONTENIDO DE LA PAGINA-->
+            <!-- Page Heading -->
+            <div
+            class="d-sm-flex align-items-center justify-content-between mb-2">
+            <h1 class="h3 mb-0 text-gray-800">Agregar Nuevo Insumo</h1>
             
+            <a
+            href="/GESTION INVENTARIO 5TO/404.html"
+            class="btn btn-secondary btn-icon-split">
+            <span class="icon text-white-50">
+                <i class="fas fa-arrow-left"></i>
+            </span>
+            <span class="text">Volver</span>
+            </a>
+            
+            </div>
+              <p class="mb-2">
+                Completa los campos con la información del insumo para registrarlo en el inventario.  
+                Asegúrate de ingresar datos precisos, como nombre, cantidad y categoría, para mantener un control eficiente.  
+                Puedes editar o actualizar la información más adelante si es necesario. 
+              </p>
+            </div>
+             <!-- Fondo oscuro -->
+              <div id="overlay"></div>
+              <!-- 🔔 ALERTA DE ÉXITO -->
+              <div id="alertaExito" class="card d-none">
+                <button class="dismiss" type="button">×</button>
+                <div class="header">
+                  <div class="image">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <g id="SVGRepo_iconCarrier">
+                        <path d="M20 7L9.00004 18L3.99994 13" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                      </g>
+                    </svg>
+                  </div>
+                  <div class="content">
+                    <span class="title">¡Insumo registrado!</span>
+                    <p class="message">El insumo ha sido agregado correctamente.</p>
+                  </div>
+                  <div class="actions">
+                    <button class="track" type="button">Ok</button>
+                  </div>
+                </div>
+              </div>
+                <!-- FORMULARIO -->
+                <div class="p-4">
+                  <form id="insumoForm" th:action="@{/api/insumos/{id}(id=${insumo.id})}" th:method="post" class="needs-validation" novalidate>
+                      
+                      <!-- Campo oculto para ID -->
+                      <input type="hidden" id="id" name="id" th:value="${insumo.id}">
+
+                      <div class="row g-3">
+                          <!-- Nombre del insumo -->
+                          <div class="col-md-6">
+                              <label for="nombre" class="form-label required">Nombre del insumo</label>
+                              <input type="text" class="form-control" th:value="${insumo.nombre}" id="nombre" name="nombre" required>
+                              <div class="invalid-feedback">
+                                  Por favor ingrese el nombre del insumo.
+                              </div>
+                          </div>
+
+                          <!-- Cantidad disponible -->
+                          <div class="col-md-4 mb-3">
+                              <label for="cantidad" class="form-label required">Cantidad disponible</label>
+                              <input type="number" class="form-control" th:value="${insumo.stock}" id="cantidad" name="stock" min="0" step="0.01" required>
+                              <div class="invalid-feedback">
+                                  Por favor ingrese una cantidad válida.
+                              </div>
+                          </div>
+
+                          <!-- Unidad de medida -->
+                          <div class="col-md-3 mb-5">
+                              <label for="unidadM" class="form-label required">Unidad de medida</label>
+                              <select class="col-11 mb-3 form-select" id="unidadM" name="unidadM" required>
+                                  <option value="" disabled>Seleccione una unidad</option>
+                                  <option value="unidades" th:selected="${insumo.unidadM == 'unidades'}">Unidades</option>
+                                  <option value="kg" th:selected="${insumo.unidadM == 'kg'}">Kilogramos</option>
+                                  <option value="g" th:selected="${insumo.unidadM == 'g'}">Gramos</option>
+                                  <option value="m" th:selected="${insumo.unidadM == 'm'}">Metros</option>
+                                  <option value="cm" th:selected="${insumo.unidadM == 'cm'}">Centímetros</option>
+                                  <option value="m2" th:selected="${insumo.unidadM == 'm2'}">Metros cuadrados</option>
+                                  <option value="m3" th:selected="${insumo.unidadM == 'm3'}">Metros cúbicos</option>
+                                  <option value="rollos" th:selected="${insumo.unidadM == 'rollos'}">Rollos</option>
+                                  <option value="cajas" th:selected="${insumo.unidadM == 'cajas'}">Cajas</option>
+                              </select>
+                              <div class="invalid-feedback">
+                                  Por favor seleccione una unidad de medida.
+                              </div>
+                          </div>
+
+                          <!-- BOTONES -->
+                          <div class="col-12 mt-0">
+                              <hr>
+                              <div class="d-flex justify-content-end mb-2 gap-5">
+                                  <button type="button" class="btn btn-outline-secondary" id="btnLimpiar">
+                                      <i class="fas fa-exclamation-circle"></i> Cancelar
+                                  </button>
+                                  <button type="submit" id="btnGuardar" class="btn btn-primary">
+                                      <i class="fas fa-pencil-alt me-1"></i> Guardar
+                                  </button>
+                              </div>
+                          </div>
+
+                      </div>
+                  </form>
+                </div>
 
 
 
-
-          
-        </div>
-        <!-- End of Main Content -->
 
         <!-- Footer -->
         <footer class="sticky-footer bg-white">
@@ -405,11 +499,8 @@
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>
 
-    <!-- Page level plugins -->
-    <script src="vendor/chart.js/Chart.min.js"></script>
-
-    <!-- Page level custom scripts -->
-    <script src="js/demo/chart-area-demo.js"></script>
-    <script src="js/demo/chart-pie-demo.js"></script>
+    <!--script Perzonalizado agregar fetch-->
+    
+    <script src="js/editar-insumo.js"></script>
   </body>
 </html>

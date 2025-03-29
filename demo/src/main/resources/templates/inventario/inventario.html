@@ -31,6 +31,8 @@
       href="vendor/datatables/dataTables.bootstrap4.min.css"
       rel="stylesheet"
     />
+    <!--CSS PERSONALIZADO-->
+    <link rel="stylesheet" href="css/dashboard.css" />
   </head>
 
   <body id="page-top">
@@ -46,10 +48,12 @@
           class="sidebar-brand d-flex align-items-center justify-content-center"
           href="index.html"
         >
-          <div class="sidebar-brand-icon rotate-n-15">
-            <i class="fas fa-laugh-wink"></i>
+          <div class="sidebar-brand-icon">
+            <i class="logotipo">
+              <img src="/img/logotipo.svg" class="" alt=""
+            /></i>
           </div>
-          <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>
+          <div class="sidebar-brand-text mx-3">SDGDI <sup>2.0</sup></div>
         </a>
 
         <!-- Divider -->
@@ -424,7 +428,7 @@
               <h1 class="h3 mb-0 text-gray-800">Gestion del Inventario</h1>
 
               <a
-                href="/GESTION INVENTARIO 5TO/404.html"
+                th:href="@{/agregar}"
                 class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
                 ><i class="fa fa-plus-circle fa-sm text-white-50"></i> Agregar
                 Nuevo Insumo</a
@@ -437,6 +441,38 @@
               búsqueda y los filtros para encontrar rápidamente lo que
               necesitas.
             </p>
+
+            <!-- 🔔 ALERTA DE CONFIRMACIÓN -->
+            <div id="alertaConfirmacion" class="card d-none">
+              <button class="dismiss" type="button">×</button>
+              <div class="header">
+                <div class="image">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <g id="SVGRepo_iconCarrier">
+                      <path
+                        d="M12 9V13M12 17H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
+                        stroke="#000000"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      ></path>
+                    </g>
+                  </svg>
+                </div>
+                <div class="content">
+                  <span class="title">¿Eliminar insumo?</span>
+                  <p class="message">Esta acción no se puede deshacer.</p>
+                </div>
+                <div class="actions">
+                  <button class="track" type="button">Sí, eliminar</button>
+                  <button class="dismiss" type="button">Cancelar</button>
+                </div>
+              </div>
+            </div>
 
             <!-- DataTales Example -->
             <div class="card shadow mb-4">
@@ -459,7 +495,6 @@
                         <th>Nombre del Insumo</th>
                         <th>Stock</th>
                         <th>Unidad de Medida</th>
-                        <th>Fecha</th>
                         <th>Acciones</th>
                       </tr>
                     </thead>
@@ -469,132 +504,10 @@
                         <th>Nombre del Insumo</th>
                         <th>Stock</th>
                         <th>Unidad de Medida</th>
-                        <th>Fecha</th>
                         <th>Acciones</th>
                       </tr>
                     </tfoot>
-                    <tbody>
-                      <tr>
-                        <td>1</td>
-                        <td>Tela de algodón</td>
-                        <td>150</td>
-                        <td>metros</td>
-                        <td>2024/03/18</td>
-                        <td>
-                          <a href="#" class="btn btn-danger btn-circle">
-                            <i class="fas fa-trash"></i>
-                          </a>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>2</td>
-                        <td>Hilo poliéster</td>
-                        <td>500</td>
-                        <td>carretes</td>
-                        <td>2024/03/17</td>
-                        <td>
-                          <a href="#" class="btn btn-danger btn-circle">
-                            <i class="fas fa-trash"></i>
-                          </a>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>3</td>
-                        <td>Cremalleras metálicas</td>
-                        <td>200</td>
-                        <td>unidades</td>
-                        <td>2024/03/16</td>
-                        <td>
-                          <a href="#" class="btn btn-danger btn-circle">
-                            <i class="fas fa-trash"></i>
-                          </a>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>4</td>
-                        <td>Botones de nácar</td>
-                        <td>300</td>
-                        <td>paquetes</td>
-                        <td>2024/03/15</td>
-                        <td>
-                          <a href="#" class="btn btn-danger btn-circle">
-                            <i class="fas fa-trash"></i>
-                          </a>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>5</td>
-                        <td>Encaje blanco</td>
-                        <td>100</td>
-                        <td>metros</td>
-                        <td>2024/03/14</td>
-                        <td>
-                          <a href="#" class="btn btn-danger btn-circle">
-                            <i class="fas fa-trash"></i>
-                          </a>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>6</td>
-                        <td>Elástico negro</td>
-                        <td>250</td>
-                        <td>rollos</td>
-                        <td>2024/03/13</td>
-                        <td>
-                          <a href="#" class="btn btn-danger btn-circle">
-                            <i class="fas fa-trash"></i>
-                          </a>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>7</td>
-                        <td>Forro sintético</td>
-                        <td>180</td>
-                        <td>metros</td>
-                        <td>2024/03/12</td>
-                        <td>
-                          <a href="#" class="btn btn-danger btn-circle">
-                            <i class="fas fa-trash"></i>
-                          </a>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>8</td>
-                        <td>Agujas para máquina</td>
-                        <td>600</td>
-                        <td>cajas</td>
-                        <td>2024/03/11</td>
-                        <td>
-                          <a href="#" class="btn btn-danger btn-circle">
-                            <i class="fas fa-trash"></i>
-                          </a>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>9</td>
-                        <td>Velcro adhesivo</td>
-                        <td>120</td>
-                        <td>rollos</td>
-                        <td>2024/03/10</td>
-                        <td>
-                          <a href="#" class="btn btn-danger btn-circle">
-                            <i class="fas fa-trash"></i>
-                          </a>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>10</td>
-                        <td>Cinta al bies</td>
-                        <td>400</td>
-                        <td>metros</td>
-                        <td>2024/03/09</td>
-                        <td>
-                          <a href="#" class="btn btn-danger btn-circle">
-                            <i class="fas fa-trash"></i>
-                          </a>
-                        </td>
-                      </tr>
-                    </tbody>
+                    <tbody id="tabla-insumos"></tbody>
                   </table>
                 </div>
               </div>
@@ -661,6 +574,10 @@
         </div>
       </div>
     </div>
+
+    <!--SCRIPT PARA CONSUMIR LA API-->
+    <script src="/js/inventario.js"></script>
+    <script src="/js/eliminar-insumo.js"></script>
 
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
