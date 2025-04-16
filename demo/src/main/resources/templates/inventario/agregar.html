@@ -35,8 +35,10 @@
     <!--CSS PARA ALERTA DE INSUMO AGREGADO-->
     <link rel="stylesheet" href="css/alerta-agre-insumo.css" />
 
+    <!-- CSRF -->
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
   </head>
-
   <body id="page-top">
     <!-- Page Wrapper -->
     <div id="wrapper">
@@ -48,7 +50,7 @@
         <!-- Sidebar - Brand -->
         <a
           class="sidebar-brand d-flex align-items-center justify-content-center"
-          href="index.html"
+          th:href="@{/dashboard}"
         >
           <div class="sidebar-brand-icon">
             <i class="logotipo">
@@ -77,7 +79,7 @@
 
         <!-- Nav Item - Pages Collapse Menu -->
         <li class="nav-item">
-          <a class="nav-link collapsed" href="#">
+          <a class="nav-link collapsed" th:href="@{/inventario}">
             <i class="fas fa-fw fa-archive"></i>
             <span>Inventario</span>
           </a>

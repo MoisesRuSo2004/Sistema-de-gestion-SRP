@@ -1,35 +1,25 @@
 package com.example.demo.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
-@Table(name = "insumos")
-public class InsumoDTO {
+@Document(collection = "insumos") // nombre de la colección en MongoDB
+public class Insumo {
 
     @Id
-    @Column(nullable = false, updatable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id; // Mongo usa String como id por defecto
 
-    @Column(nullable = false)
     private String nombre;
-
-    @Column(nullable = false)
     private Integer stock;
-
-    @Column(nullable = false)
     private String unidadM;
 
-    public Long getId() {
+    // Getters y setters
+
+    public String getId() {
         return id;
     }
 
-    public void setId(final Long id) {
+    public void setId(final String id) {
         this.id = id;
     }
 
@@ -56,5 +46,4 @@ public class InsumoDTO {
     public void setUnidadM(String unidadM) {
         this.unidadM = unidadM;
     }
-
 }

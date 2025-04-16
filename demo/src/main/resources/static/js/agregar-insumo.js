@@ -5,11 +5,22 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnCerrarAlerta = document.querySelector("#alertaExito .dismiss");
   const btnAceptarAlerta = document.querySelector("#alertaExito .track");
 
+  // Extraer CSRF token y header desde las etiquetas meta
+  const csrfToken = document
+    .querySelector('meta[name="_csrf"]')
+    .getAttribute("content");
+  const csrfHeader = document
+    .querySelector('meta[name="_csrf_header"]')
+    .getAttribute("content");
+
   async function crearInsumo(datosInsumo) {
     try {
       const respuesta = await fetch("http://localhost:8080/api/insumos", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          [csrfHeader]: csrfToken, // Usamos el header dinámico
+        },
         body: JSON.stringify(datosInsumo),
       });
 
@@ -53,21 +64,19 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   function mostrarAlerta() {
-    overlay.style.display = "block"; // Mostrar fondo oscuro
-    alertaExito.classList.remove("d-none"); // Asegurar que se muestra
-    alertaExito.style.display = "flex"; // Asegurar visibilidad
+    overlay.style.display = "block";
+    alertaExito.classList.remove("d-none");
+    alertaExito.style.display = "flex";
 
-    // Ocultar la alerta después de 5 segundos automáticamente
     setTimeout(ocultarAlerta, 5000);
   }
 
   function ocultarAlerta() {
-    overlay.style.display = "none"; // Ocultar fondo oscuro
-    alertaExito.classList.add("d-none"); // Ocultar alerta
-    alertaExito.style.display = "none"; // Asegurar que se oculta correctamente
+    overlay.style.display = "none";
+    alertaExito.classList.add("d-none");
+    alertaExito.style.display = "none";
   }
 
-  // Cerrar alerta al hacer clic en el botón de cerrar o "Ok"
   btnCerrarAlerta.addEventListener("click", ocultarAlerta);
   btnAceptarAlerta.addEventListener("click", ocultarAlerta);
 });

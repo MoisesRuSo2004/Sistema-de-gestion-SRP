@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
-import com.example.demo.model.InsumoDTO;
+import com.example.demo.model.Insumo;
 
 @Controller
 public class InventarioVistaController {
@@ -22,23 +22,23 @@ public class InventarioVistaController {
     }
 
     @GetMapping("/editar")
-    public String editarinventario(@RequestParam("id") Long id, Model model) {
+    public String editarInventario(@RequestParam("id") String id, Model model) {
         try {
             String apiUrl = "http://localhost:8080/api/insumos/" + id;
             RestTemplate restTemplate = new RestTemplate();
 
-            InsumoDTO insumo = restTemplate.getForObject(apiUrl, InsumoDTO.class);
+            Insumo insumo = restTemplate.getForObject(apiUrl, Insumo.class);
 
             if (insumo == null) {
                 throw new RuntimeException("Insumo no encontrado");
             }
 
-            model.addAttribute("insumo", insumo); // ✅ Error corregido
-
+            model.addAttribute("insumo", insumo);
             return "inventario/editar";
         } catch (Exception e) {
             System.err.println("Error al obtener insumo: " + e.getMessage());
-            return "error"; // Puedes crear una página `error.html`
+            return "error";
         }
     }
+
 }

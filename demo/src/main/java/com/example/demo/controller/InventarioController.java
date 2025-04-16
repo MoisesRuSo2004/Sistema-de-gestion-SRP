@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.model.InsumoDTO;
+import com.example.demo.model.Insumo;
 import com.example.demo.service.InsumoService;
 
 @RestController
@@ -24,25 +24,25 @@ public class InventarioController {
 
     // BTENER TODOS LOS INSUMOS (GET)
     @GetMapping
-    public List<InsumoDTO> getAllInsumos() {
+    public List<Insumo> getAllInsumos() {
         return insumoService.listarInsumos();
     }
 
     // OBTENER INSUMOS POR ID (GET)
     @GetMapping("/{id}")
-    public Optional<InsumoDTO> getInsumoById(@PathVariable Long id) {
+    public Optional<Insumo> getInsumoById(@PathVariable String id) {
         return insumoService.obtenerInsumoPorId(id);
     }
 
     // CREAR UN NUEVO INSUMO (POST)
     @PostMapping
-    public InsumoDTO createInsumo(@RequestBody InsumoDTO insumo) {
+    public Insumo createInsumo(@RequestBody Insumo insumo) {
         return insumoService.guardarInsumo(insumo);
     }
 
     // ACTUALIZAR INSUMO (PUT)
     @PutMapping("/{id}")
-    public InsumoDTO updateInsumo(@PathVariable Long id, @RequestBody InsumoDTO insumo) {
+    public Insumo updateInsumo(@PathVariable Long id, @RequestBody Insumo insumo) {
         System.out.println("recibiendo insumo: " + insumo);
         insumoService.actualizarInsumo(insumo);
         return insumoService.actualizarInsumo(insumo);
@@ -50,7 +50,7 @@ public class InventarioController {
 
     // ELIMINAR UN INSUMO (DELETE)
     @DeleteMapping("/{id}")
-    public void deleteInsumo(@PathVariable Long id) {
+    public void deleteInsumo(@PathVariable String id) {
         insumoService.eliminarInsumo(id);
     }
 
