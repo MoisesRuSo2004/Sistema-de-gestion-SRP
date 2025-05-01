@@ -26,7 +26,7 @@ async function obtenerInsumos() {
             <a href="/editar?id=${insumo.id}" onclick="editarInsumo(${insumo.id})" class="btn btn-warning btn-circle">
               <i class="fas fa-pencil-alt"></i>
             </a>
-            <a href="inventario/editar.html?id=${insumo.id}" onclick="eliminarInsumo(${insumo.id})" class="btn btn-danger btn-circle">
+            <a href="${insumo.id}" class="btn btn-danger btn-circle btn-eliminar" data-id="${insumo.id}">
               <i class="fas fa-trash"></i>
             </a>
           </td>

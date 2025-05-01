@@ -75,6 +75,10 @@ document.addEventListener("DOMContentLoaded", () => {
     overlay.style.display = "none";
     alertaExito.classList.add("d-none");
     alertaExito.style.display = "none";
+
+    if (ocultarAlerta) {
+      window.location.href = "/inventario";
+    }
   }
 
   btnCerrarAlerta.addEventListener("click", ocultarAlerta);

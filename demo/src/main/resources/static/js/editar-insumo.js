@@ -9,11 +9,11 @@ async function cargarDatosInsumo(id) {
     if (!response.ok)
       throw new Error(`Error al obtener el insumo: ${response.status}`);
 
-    const { nombre = "", stock = 0, unidadM = "" } = await response.json();
+    const insumo = await response.json();
 
-    document.getElementById("nombre").value = nombre;
-    document.getElementById("cantidad").value = stock;
-    document.getElementById("unidadM").value = unidadM;
+    document.getElementById("nombre").value = insumo.nombre || "";
+    document.getElementById("cantidad").value = insumo.stock || 0;
+    document.getElementById("unidadM").value = insumo.unidadM || "";
   } catch (error) {
     console.error("Error al cargar el insumo:", error);
     mostrarAlerta(
@@ -72,13 +72,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function actualizarInsumo(id, datosInsumo) {
     try {
+      // Obtener token CSRF y header desde las metas del HTML
+      const token = document
+        .querySelector('meta[name="_csrf"]')
+        .getAttribute("content");
+      const header = document
+        .querySelector('meta[name="_csrf_header"]')
+        .getAttribute("content");
+
       const response = await fetch(`http://localhost:8080/api/insumos/${id}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          [header]: token, // Aquí se pasa el token CSRF con el nombre correcto
+        },
         body: JSON.stringify(datosInsumo),
       });
 
-      if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error(`Error HTTP: ${response.status}, Detalle: ${errorText}`);
+        throw new Error(`Error HTTP: ${response.status}`);
+      }
 
       return await response.json();
     } catch (error) {

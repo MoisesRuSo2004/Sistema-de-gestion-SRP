@@ -13,6 +13,18 @@ public class Insumo {
     private Integer stock;
     private String unidadM;
 
+    // Constructor vacío
+    public Insumo() {
+    }
+
+    // Constructor con parámetros
+    public Insumo(String id, String nombre, Integer stock, String unidadM) {
+        this.id = id;
+        this.nombre = nombre;
+        this.stock = stock;
+        this.unidadM = unidadM;
+    }
+
     // Getters y setters
 
     public String getId() {
@@ -45,5 +57,15 @@ public class Insumo {
 
     public void setUnidadM(String unidadM) {
         this.unidadM = unidadM;
+    }
+
+    @Override
+    public String toString() {
+        return "Insumo{" +
+                "id='" + id + '\'' +
+                ", nombre='" + nombre + '\'' +
+                ", stock=" + stock +
+                ", unidadM='" + unidadM + '\'' +
+                '}';
     }
 }

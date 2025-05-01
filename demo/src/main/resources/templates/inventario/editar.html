@@ -35,6 +35,10 @@
     <!--CSS PARA ALERTA DE INSUMO AGREGADO-->
     <link rel="stylesheet" href="css/alerta-agre-insumo.css" />
 
+    <!-- CSRF -->
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+
   </head>
 
   <body id="page-top">

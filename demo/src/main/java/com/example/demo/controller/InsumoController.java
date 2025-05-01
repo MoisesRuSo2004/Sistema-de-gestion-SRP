@@ -18,7 +18,7 @@ import com.example.demo.service.InsumoService;
 
 @RestController
 @RequestMapping("/api/insumos")
-public class InventarioController {
+public class InsumoController {
     @Autowired
     private InsumoService insumoService;
 
@@ -42,9 +42,14 @@ public class InventarioController {
 
     // ACTUALIZAR INSUMO (PUT)
     @PutMapping("/{id}")
-    public Insumo updateInsumo(@PathVariable Long id, @RequestBody Insumo insumo) {
-        System.out.println("recibiendo insumo: " + insumo);
-        insumoService.actualizarInsumo(insumo);
+    public Insumo updateInsumo(@PathVariable String id, @RequestBody Insumo insumo) {
+        System.out.println("ID de la URL: " + id);
+        System.out.println("ID del insumo recibido: " + insumo.getId());
+        System.out.println("Datos del insumo recibido: " + insumo.getNombre() + ", " + insumo.getStock() + ", "
+                + insumo.getUnidadM());
+
+        insumo.setId(id);
+
         return insumoService.actualizarInsumo(insumo);
     }
 

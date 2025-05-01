@@ -31,6 +31,13 @@
 
     <!--CSS PERSONALIZADO-->
     <link rel="stylesheet" href="css/dashboard.css" />
+
+    <!--CSS PARA ALERTA DE INSUMO AGREGADO-->
+    <link rel="stylesheet" href="css/alerta-agre-insumo.css" />
+
+    <!-- CSRF -->
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
   </head>
 
   <body id="page-top">
@@ -340,21 +347,46 @@
               </p>
             </div>
 
+            <!-- Fondo oscuro -->
+            <div id="overlay"></div>
+            <!-- 🔔 ALERTA DE ÉXITO -->
+            <div id="alertaExito" class="card d-none">
+              <button class="dismiss" type="button">×</button>
+              <div class="header">
+                <div class="image">
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g id="SVGRepo_iconCarrier">
+                      <path d="M20 7L9.00004 18L3.99994 13" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </g>
+                  </svg>
+                </div>
+                <div class="content">
+                  <span class="title">¡Entrada registrada!</span>
+                  <p class="message">La entrada ha sido agregada correctamente.</p>
+                </div>
+                <div class="actions">
+                  <button class="track" type="button">Ok</button>
+                </div>
+              </div>
+            </div>
+
             <!--FORMULARIO-->
             <div class="p-4">
                 <form id="insumoForm" class="needs-validation" novalidate>
                     <div class="row g-3">
                         <!-- Nombre del insumo -->
-                        <div class="col-md-6">
-                            <label for="nombreInsumo" class="form-label required">Nombre del insumo</label>
-                            <input type="text" class="form-control" id="nombreInsumo" required>
-                            <div class="invalid-feedback">
-                                Por favor ingrese el nombre del insumo.
-                            </div>
+                        <div class="col-md-6 position-relative">
+                          <label for="nombreEntrada" class="form-label required">Nombre del insumo</label>
+                          <input type="text" class="form-control" id="nombre" autocomplete="off" required>
+                          <input type="hidden" id="insumoIdSeleccionado">
+                          <div id="sugerencias" class="list-group position-absolute w-100"></div></div>
+                          <div class="invalid-feedback">
+                              Por favor ingrese el nombre del insumo.
+                          </div>
                         </div>
                         <!-- Cantidad disponible -->
                         <div class="col-md-4 mb-3">
-                            <label for="cantidad" class="form-label required">Cantidad disponible</label>
+                            <label for="cantidad" class="form-label required">Cantidad</label>
                             <input type="number" class="form-control" id="cantidad" min="0" step="0.01" required>
                             <div class="invalid-feedback">
                                 Por favor ingrese una cantidad válida.
@@ -364,7 +396,7 @@
                         <!-- Fecha de adquisición -->
                         <div class="col-md-6">
                             <label for="fechaAdquisicion" class="form-label required">Fecha de adquisición</label>
-                            <input type="date" class="form-control" id="fechaAdquisicion" required>
+                            <input type="date" class="form-control" id="fecha" required>
                             <div class="invalid-feedback">
                                 Por favor seleccione una fecha.
                             </div>
@@ -455,7 +487,8 @@
       </div>
     </div>
 
-    <!-- Bootstrap core JavaScript-->
+    <div layout:fragment="scripts">
+      <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
@@ -464,5 +497,10 @@
 
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>
+
+    <!--SCRIPT PARA CONSUMIR LA API-->
+    <script src="/js/agregar-entrada.js"></script>
+    </div>
+    
   </body>
 </html>

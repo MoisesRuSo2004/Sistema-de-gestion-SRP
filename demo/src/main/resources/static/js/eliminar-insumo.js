@@ -1,99 +1,84 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const btnEliminar = document.getElementById("btnEliminar");
-  const insumoId = new URLSearchParams(window.location.search).get("id");
+  const overlay = document.getElementById("overlay");
+  const alertaConfirmacion = document.getElementById("alertaConfirmacion");
 
-  if (!insumoId) return;
+  const btnCerrarConfirmacion = alertaConfirmacion.querySelectorAll(".dismiss");
+  const btnConfirmarEliminacion = alertaConfirmacion.querySelector(".track");
 
-  btnEliminar.addEventListener("click", () => {
-    mostrarConfirmacion(
-      "¿Eliminar insumo?",
-      "Esta acción no se puede deshacer. ¿Estás seguro?",
-      () => eliminarInsumo(insumoId)
-    );
+  let insumoIdSeleccionado = null;
+  let botonSeleccionado = null;
+
+  // Escuchar clicks en botones de eliminación
+  document.addEventListener("click", async (e) => {
+    const boton = e.target.closest(".btn-eliminar");
+    if (!boton) return;
+
+    e.preventDefault();
+    insumoIdSeleccionado = boton.getAttribute("data-id");
+    botonSeleccionado = boton;
+
+    if (insumoIdSeleccionado) mostrarConfirmacion();
   });
-});
 
-async function eliminarInsumo(id) {
-  try {
-    const response = await fetch(`http://localhost:8080/api/insumos/${id}`, {
-      method: "DELETE",
-    });
-
-    if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
-
-    mostrarAlerta(
-      "¡Eliminado!",
-      "El insumo ha sido eliminado correctamente.",
-      true
-    );
-  } catch (error) {
-    console.error("Error al eliminar el insumo:", error);
-    mostrarAlerta("Error", "Hubo un problema al eliminar el insumo.", false);
-  }
-}
-
-function mostrarConfirmacion(titulo, mensaje, callback) {
-  const alertaConfirmacion = document.getElementById("alertaConfirmacion");
-  const overlay = document.getElementById("overlay");
-  const tituloElemento = alertaConfirmacion.querySelector(".title");
-  const mensajeElemento = alertaConfirmacion.querySelector(".message");
-  const btnAceptar = alertaConfirmacion.querySelector(".track");
-  const btnCancelar = alertaConfirmacion.querySelector(".dismiss");
-
-  tituloElemento.textContent = titulo;
-  mensajeElemento.textContent = mensaje;
-
-  overlay.style.display = "block";
-  alertaConfirmacion.classList.remove("d-none");
-  alertaConfirmacion.style.display = "flex";
-
-  btnAceptar.onclick = () => {
+  // Confirmar eliminación
+  btnConfirmarEliminacion.addEventListener("click", async () => {
     ocultarConfirmacion();
-    callback();
-  };
 
-  btnCancelar.onclick = ocultarConfirmacion;
-}
+    const eliminado = await eliminarInsumo(insumoIdSeleccionado);
 
-function ocultarConfirmacion() {
-  const alertaConfirmacion = document.getElementById("alertaConfirmacion");
-  const overlay = document.getElementById("overlay");
+    if (eliminado && botonSeleccionado) {
+      const fila = botonSeleccionado.closest("tr");
+      if (fila) fila.remove();
+    }
 
-  overlay.style.display = "none";
-  alertaConfirmacion.classList.add("d-none");
-  alertaConfirmacion.style.display = "none";
-}
+    insumoIdSeleccionado = null;
+    botonSeleccionado = null;
+  });
 
-function mostrarAlerta(titulo, mensaje, esExito) {
-  const alertaExito = document.getElementById("alertaExito");
-  const overlay = document.getElementById("overlay");
-  const tituloElemento = alertaExito.querySelector(".title");
-  const mensajeElemento = alertaExito.querySelector(".message");
-  const btnAceptar = alertaExito.querySelector(".track");
+  // Cancelar confirmación
+  btnCerrarConfirmacion.forEach((btn) => {
+    btn.addEventListener("click", ocultarConfirmacion);
+  });
 
-  tituloElemento.textContent = titulo;
-  mensajeElemento.textContent = mensaje;
+  async function eliminarInsumo(id) {
+    try {
+      const token = document
+        .querySelector('meta[name="_csrf"]')
+        ?.getAttribute("content");
+      const header = document
+        .querySelector('meta[name="_csrf_header"]')
+        ?.getAttribute("content");
 
-  overlay.style.display = "block";
-  alertaExito.classList.remove("d-none");
-  alertaExito.style.display = "flex";
+      const headers = token && header ? { [header]: token } : {};
 
-  setTimeout(() => {
-    ocultarAlerta(esExito);
-  }, 4000);
+      const response = await fetch(`http://localhost:8080/api/insumos/${id}`, {
+        method: "DELETE",
+        headers: headers,
+      });
 
-  btnAceptar.onclick = () => ocultarAlerta(esExito);
-}
+      if (!response.ok) {
+        console.error(
+          "Error al eliminar:",
+          response.status,
+          await response.text()
+        );
+        return false;
+      }
 
-function ocultarAlerta(esExito) {
-  const alertaExito = document.getElementById("alertaExito");
-  const overlay = document.getElementById("overlay");
-
-  overlay.style.display = "none";
-  alertaExito.classList.add("d-none");
-  alertaExito.style.display = "none";
-
-  if (esExito) {
-    window.location.href = "/inventario";
+      return true;
+    } catch (error) {
+      console.error("Error de red al eliminar insumo:", error);
+      return false;
+    }
   }
-}
+
+  function mostrarConfirmacion() {
+    overlay.style.display = "block";
+    alertaConfirmacion.classList.remove("d-none");
+  }
+
+  function ocultarConfirmacion() {
+    overlay.style.display = "none";
+    alertaConfirmacion.classList.add("d-none");
+  }
+});

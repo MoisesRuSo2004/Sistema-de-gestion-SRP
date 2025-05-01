@@ -32,6 +32,7 @@ public class SecurityConfig {
                         .loginPage("/login") // tu vista personalizada
                         .defaultSuccessUrl("/dashboard", true)
                         .permitAll())
+
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/login?logout")

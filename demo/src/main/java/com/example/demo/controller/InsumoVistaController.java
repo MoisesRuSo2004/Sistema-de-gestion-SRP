@@ -1,15 +1,20 @@
 package com.example.demo.controller;
 
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.client.RestTemplate;
-
 import com.example.demo.model.Insumo;
+import com.example.demo.service.InsumoService;
 
 @Controller
-public class InventarioVistaController {
+public class InsumoVistaController {
+
+    @Autowired
+    private InsumoService insumoService;
 
     @GetMapping("/inventario")
     public String mostrarInventario() {
@@ -24,20 +29,20 @@ public class InventarioVistaController {
     @GetMapping("/editar")
     public String editarInventario(@RequestParam("id") String id, Model model) {
         try {
-            String apiUrl = "http://localhost:8080/api/insumos/" + id;
-            RestTemplate restTemplate = new RestTemplate();
+            Optional<Insumo> insumoOpt = insumoService.obtenerInsumoPorId(id);
 
-            Insumo insumo = restTemplate.getForObject(apiUrl, Insumo.class);
-
-            if (insumo == null) {
+            if (!insumoOpt.isPresent()) {
                 throw new RuntimeException("Insumo no encontrado");
             }
 
-            model.addAttribute("insumo", insumo);
+            model.addAttribute("insumo", insumoOpt.get());
             return "inventario/editar";
         } catch (Exception e) {
             System.err.println("Error al obtener insumo: " + e.getMessage());
-            return "error";
+            e.printStackTrace();
+            // Agregar atributos para mostrar el error en la vista
+            model.addAttribute("errorMensaje", "No se pudo cargar el insumo: " + e.getMessage());
+            return "error"; // Asegúrate de que esta vista exista
         }
     }
 

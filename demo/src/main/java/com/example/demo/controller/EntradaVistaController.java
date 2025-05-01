@@ -4,9 +4,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class EntradasVistaController {
+public class EntradaVistaController {
     @GetMapping("/entradas")
-    public String entradas() {
+    public String mostrarEntradas() {
+        return "entradas/lista";
+    }
+
+    @GetMapping("/entradas-add")
+    public String agregarEntrada() {
         return "entradas/add";
     }
 

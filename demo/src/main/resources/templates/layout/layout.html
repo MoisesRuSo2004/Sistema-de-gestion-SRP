@@ -1,5 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html
+  lang="en"
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -10,7 +14,7 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
 
-    <title>SB Admin 2 - Dashboard</title> 
+    <title>Dashboard</title>
 
     <!--FAVICON-->
     <link
@@ -20,7 +24,6 @@
     />
 
     <!-- Custom fonts for this template-->
-
     <link
       href="vendor/fontawesome-free/css/all.min.css"
       rel="stylesheet"
@@ -33,11 +36,9 @@
 
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet" />
-
-    <!--CSS PERSONALIZADO-->
-    <link rel="stylesheet" href="css/dashboard.css" />
+    
+   
   </head>
-
   <body id="page-top">
     <!-- Page Wrapper -->
     <div id="wrapper">
@@ -49,14 +50,11 @@
         <!-- Sidebar - Brand -->
         <a
           class="sidebar-brand d-flex align-items-center justify-content-center"
-          href="index.html"
+          th:href="@{/dashboard}"
         >
           <div class="sidebar-brand-icon">
             <i class="logotipo">
-              <img
-                src="/GESTION INVENTARIO 5TO/img/logotipo.svg"
-                class=""
-                alt=""
+              <img src="/img/logotipo.svg" class="" alt=""
             /></i>
           </div>
           <div class="sidebar-brand-text mx-3">SDGDI <sup>2.0</sup></div>
@@ -66,7 +64,7 @@
         <hr class="sidebar-divider my-0" />
 
         <!-- Nav Item - Dashboard -->
-        <li class="nav-item active">
+        <li class="nav-item">
           <a class="nav-link" th:href="@{/dashboard}">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Dashboard</span></a
@@ -77,11 +75,11 @@
         <hr class="sidebar-divider" />
 
         <!-- Heading -->
-        <div class="sidebar-heading">Inventario</div>
+        <div class="sidebar-heading">Manejo De Insumos</div>
 
         <!-- Nav Item - Pages Collapse Menu -->
         <li class="nav-item">
-          <a class="nav-link collapsed" href="#">
+          <a class="nav-link collapsed" th:href="@{/inventario}">
             <i class="fas fa-fw fa-archive"></i>
             <span>Inventario</span>
           </a>
@@ -89,7 +87,7 @@
 
         <!-- Nav Item - Utilities Collapse Menu -->
         <li class="nav-item">
-          <a class="nav-link collapsed" href="#">
+          <a class="nav-link collapsed" th:href="@{/entradas}">
             <i class="fas fa-fw fa-arrow-left"></i>
             <span>Entradas</span>
           </a>
@@ -151,7 +149,7 @@
                 <input
                   type="text"
                   class="form-control bg-light border-0 small"
-                  placeholder="Search for..."
+                  placeholder="Buscar..."
                   aria-label="Search"
                   aria-describedby="basic-addon2"
                 />
@@ -323,20 +321,12 @@
           </nav>
           <!-- End of Topbar -->
 
-          <!-- Begin Page Content -->
+          <!-- ESTE ES EL LAYOUT PARA LAS DEMAS VISTAS -->
           <div class="container-fluid">
-
-
-            <!--AQUI VA EL CONTENIDO DE LA PAGINA-->
-            
-
-
-
-
-          
-        </div>
-        <!-- End of Main Content -->
-
+             <div id="content">
+              <div layout:fragment="content"></div>
+            </div>
+          </div>
         <!-- Footer -->
         <footer class="sticky-footer bg-white">
           <div class="container my-auto">
@@ -368,7 +358,7 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+            <h5 class="modal-title" id="exampleModalLabel">¿Listo para partir?</h5>
             <button
               class="close"
               type="button"
@@ -379,7 +369,7 @@
             </button>
           </div>
           <div class="modal-body">
-            Select "Logout" below if you are ready to end your current session.
+            Seleccione “Cerrar sesión” a continuación si está listo para finalizar su sesión actual.
           </div>
           <div class="modal-footer">
             <button
@@ -387,29 +377,18 @@
               type="button"
               data-dismiss="modal"
             >
-              Cancel
+              Cancelar
             </button>
-            <a class="btn btn-primary" href="login.html">Logout</a>
+            <form id="logoutForm" th:action="@{/logout}" method="post" style="display: inline;">
+              <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+              <button type="submit" class="btn btn-primary">Cerrar sesión
+              </button>
+            </form>
           </div>
         </div>
       </div>
     </div>
-
-    <!-- Bootstrap core JavaScript-->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Core plugin JavaScript-->
-    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-
-    <!-- Custom scripts for all pages-->
-    <script src="js/sb-admin-2.min.js"></script>
-
-    <!-- Page level plugins -->
-    <script src="vendor/chart.js/Chart.min.js"></script>
-
-    <!-- Page level custom scripts -->
-    <script src="js/demo/chart-area-demo.js"></script>
-    <script src="js/demo/chart-pie-demo.js"></script>
+    <!-- Scripts específicos de cada vista -->
+    <div layout:fragment="scripts"></div>
   </body>
 </html>

@@ -15,7 +15,7 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
 
-    <title>Inventario</title>
+    <title>Entradas</title>
 
     <!-- Custom fonts for this template -->
     <link
@@ -38,13 +38,16 @@
     />
     <!--CSS PERSONALIZADO-->
     <link rel="stylesheet" href="css/dashboard.css" />
-    <link rel="stylesheet" href="css/alerta-eliminar-insumo.css" />
+    <link rel="stylesheet" href="" />
 
     <meta name="_csrf" th:content="${_csrf.token}" />
     <meta name="_csrf_header" th:content="${_csrf.headerName}" />
   </head>
   <body id="page-top">
-    <div layout:fragment="content">
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+      <div layout:fragment="content">
+        <!-- End of Topbar -->
 
           <!-- Begin Page Content -->
           <div class="container-fluid">
@@ -52,21 +55,21 @@
             <div
               class="d-sm-flex align-items-center justify-content-between mb-4"
             >
-              <h1 class="h3 mb-0 text-gray-800">Gestion del Inventario</h1>
+              <h1 class="h3 mb-0 text-gray-800">Entradas</h1>
 
               <a
-                th:href="@{/agregar}"
+                th:href="@{/entradas-add}"
                 class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
                 ><i class="fa fa-plus-circle fa-sm text-white-50"></i> Agregar
-                Nuevo Insumo</a
+                Entrada</a
               >
             </div>
             <p class="mb-5">
-              Aquí podrás gestionar todos los insumos de manera eficiente.
-              Agrega nuevos productos, edita la información existente y mantén
-              el control de tu inventario de forma organizada. Usa la barra de
-              búsqueda y los filtros para encontrar rápidamente lo que
-              necesitas.
+              Aquí podrás gestionar todas las entradas de manera eficiente.
+              Registra nuevas compras, visualiza las entradas anteriores y
+              mantén el control del historial de insumos ingresados de forma
+              organizada. Usa la barra de búsqueda y los filtros para encontrar
+              rápidamente lo que necesitas.
             </p>
             <!-- Fondo oscuro -->
             <div id="overlay"></div>
@@ -119,23 +122,23 @@
                   >
                     <thead>
                       <tr>
-                        <th>ID</th>
-                        <th>Nombre del Insumo</th>
-                        <th>Stock</th>
-                        <th>Unidad de Medida</th>
+                        <th>Nombre</th>
+                        <th>Fecha</th>
+                        <th>Descripción</th>
+                        <th>Cantidad</th>
                         <th>Acciones</th>
                       </tr>
                     </thead>
                     <tfoot>
                       <tr>
-                        <th>ID</th>
-                        <th>Nombre del Insumo</th>
-                        <th>Stock</th>
-                        <th>Unidad de Medida</th>
+                        <th>Nombre</th>
+                        <th>Fecha</th>
+                        <th>Descripción</th>
+                        <th>Cantidas</th>
                         <th>Acciones</th>
                       </tr>
                     </tfoot>
-                    <tbody id="tabla-insumos"></tbody>
+                    <tbody id="tabla-entradas"></tbody>
                   </table>
                 </div>
               </div>
@@ -201,8 +204,14 @@
           </div>
         </div>
       </div>
+      </div>
+          
     </div>
+
     <div layout:fragment="scripts">
+      <!--SCRIPT PARA CONSUMIR LA API-->
+      <script src="/js/entradas.js"></script>
+
       <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -216,10 +225,6 @@
     <!-- Page level plugins -->
     <script src="vendor/datatables/jquery.dataTables.min.js"></script>
     <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
-
-    <!--SCRIPT PARA CONSUMIR LA API DE LA VISTA INVENTARIO-->
-    <script src="/js/inventario.js"></script>
-    <script src="/js/eliminar-insumo.js"></script>
     </div>
   </body>
 </html>
