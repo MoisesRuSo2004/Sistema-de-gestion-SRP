@@ -1,8 +1,9 @@
-package com.example.demo.repos;
+package com.example.demo.repos.mongo;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
-import com.example.demo.model.Entrada;
+
+import com.example.demo.model.mongo.Entrada;
 
 @Repository
 public interface EntradaRepository extends MongoRepository<Entrada, String> {

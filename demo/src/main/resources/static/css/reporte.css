@@ -1,0 +1,22 @@
+body {
+  background-color: #f4f6f9;
+}
+
+.reporte-container {
+  max-width: 100%;
+  margin: 50px auto;
+  background-color: white;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.reporte-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.form-control:focus {
+  box-shadow: none;
+  border-color: #198754;
+}

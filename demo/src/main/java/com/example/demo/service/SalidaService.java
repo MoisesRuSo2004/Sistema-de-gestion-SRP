@@ -8,11 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.demo.model.DetalleSalida;
-import com.example.demo.model.Insumo;
-import com.example.demo.model.Salida;
-import com.example.demo.repos.InsumoRepository;
-import com.example.demo.repos.SalidaRepository;
+import com.example.demo.model.mongo.DetalleSalida;
+import com.example.demo.model.mongo.Insumo;
+import com.example.demo.model.mongo.Salida;
+import com.example.demo.repos.mongo.InsumoRepository;
+import com.example.demo.repos.mongo.SalidaRepository;
 
 @Service
 public class SalidaService {

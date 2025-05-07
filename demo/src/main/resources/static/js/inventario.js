@@ -18,7 +18,7 @@ async function obtenerInsumos() {
     insumos.forEach((insumo) => {
       tbody.innerHTML += `
         <tr>
-          <td>${insumo.id}</td>
+          
           <td>${insumo.nombre}</td>
           <td>${insumo.stock}</td>
           <td>${insumo.unidadM}</td>

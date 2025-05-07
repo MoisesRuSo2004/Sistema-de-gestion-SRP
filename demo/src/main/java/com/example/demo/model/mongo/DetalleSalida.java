@@ -1,4 +1,4 @@
-package com.example.demo.model;
+package com.example.demo.model.mongo;
 
 import org.springframework.data.annotation.Id;
 

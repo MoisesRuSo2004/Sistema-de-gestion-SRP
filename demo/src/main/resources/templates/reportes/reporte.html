@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html
+  lang="en"
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout/layout}"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Generador de Reportes</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Custom fonts for this template-->
+    <link
+      href="vendor/fontawesome-free/css/all.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+      rel="stylesheet"
+    />
+
+    <!-- Custom styles for this template-->
+    <link href="css/sb-admin-2.min.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="css/report.css" />
+
+    <!--CSS PERSONALIZADO-->
+    <link rel="stylesheet" href="css/dashboard.css" />
+  </head>
+  <body id="page-top">
+    <div layout:fragment="content">
+      <div class="container-fluid">
+        <div class="reporte-container">
+          <div class="reporte-header">
+            <h1 class="h3 mb-2 text-gray-800">Generar de Reporte</h1>
+            <p class="mb-4">Seleccione los criterios para generar el informe</p>
+          </div>
+
+          <form id="reporteForm">
+            <div class="mb-3">
+              <label for="tipoInforme" class="form-label"
+                >Tipo de Informe</label
+              >
+              <select class="form-select" id="tipoInforme" required>
+                <option value="">-- Seleccione --</option>
+                <option>Informe De Insumos</option>
+                <option>Informe De Entradas</option>
+                <option>Informe de Salidas</option>
+              </select>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col">
+                <label for="fechaInicio" class="form-label">Desde</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  id="fechaInicio"
+                  required
+                />
+              </div>
+              <div class="col">
+                <label for="fechaFin" class="form-label">Hasta</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  id="fechaFin"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="centro" class="form-label">Centro de Atención</label>
+              <select class="form-select" id="centro">
+                <option>Todos</option>
+                <option>Centro A</option>
+                <option>Centro B</option>
+                <option>Centro C</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Tipo de Reporte</label>
+              <div>
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="tipoReporte"
+                    id="acumulado"
+                    value="acumulado"
+                    checked
+                  />
+                  <label class="form-check-label" for="acumulado"
+                    >Acumulado</label
+                  >
+                </div>
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="tipoReporte"
+                    id="agrupado"
+                    value="agrupado"
+                  />
+                  <label class="form-check-label" for="agrupado"
+                    >Agrupado</label
+                  >
+                </div>
+              </div>
+            </div>
+
+            <div class="d-grid gap-2">
+              <a
+                th:href="@{/generar-reporte}"
+                class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
+                ><i class="fa fa-plus-circle fa-sm text-white-50"></i> Generar
+                Reporte</a
+              >
+            </div>
+          </form>
+        </div>
+
+        <script>
+          document
+            .getElementById("reporteForm")
+            .addEventListener("submit", function (e) {
+              e.preventDefault();
+              const tipoInforme = document.getElementById("tipoInforme").value;
+              if (!tipoInforme) {
+                alert("⚠️ Debe escoger el informe a mostrar.");
+              } else {
+                alert("✅ Generando reporte...");
+                // Aquí puedes hacer la lógica para enviar el formulario con fetch o redirigir.
+              }
+            });
+        </script>
+      </div>
+    </div>
+
+    <div layout:fragment="scripts">
+      <!-- Bootstrap core JavaScript-->
+      <script src="vendor/jquery/jquery.min.js"></script>
+      <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+      <!-- Core plugin JavaScript-->
+      <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+      <!-- Custom scripts for all pages-->
+      <script src="js/sb-admin-2.min.js"></script>
+    </div>
+  </body>
+</html>

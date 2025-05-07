@@ -1,4 +1,4 @@
-package com.example.demo.model;
+package com.example.demo.model.mongo;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -6,26 +6,26 @@ import java.util.List;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "entradas")
-public class Entrada {
+@Document(collection = "salidas")
+public class Salida {
     @Id
     private String id;
     private LocalDate fecha;
     private String descripcion;
-    private List<DetalleEntrada> detalles; // Nueva propiedad para los detalles
+    private List<DetalleSalida> detalles; // Nueva propiedad para los detalles
 
     // Constructor vacío
-    public Entrada() {
+    public Salida() {
     }
 
     // Constructor con campos básicos
-    public Entrada(LocalDate fecha, String descripcion) {
+    public Salida(LocalDate fecha, String descripcion) {
         this.fecha = fecha;
         this.descripcion = descripcion;
     }
 
     // Constructor con todos los campos
-    public Entrada(LocalDate fecha, String descripcion, List<DetalleEntrada> detalles) {
+    public Salida(LocalDate fecha, String descripcion, List<DetalleSalida> detalles) {
         this.fecha = fecha;
         this.descripcion = descripcion;
         this.detalles = detalles;
@@ -57,17 +57,17 @@ public class Entrada {
     }
 
     // Nuevos getters y setters para detalles
-    public List<DetalleEntrada> getDetalles() {
+    public List<DetalleSalida> getDetalles() {
         return detalles;
     }
 
-    public void setDetalles(List<DetalleEntrada> detalles) {
+    public void setDetalles(List<DetalleSalida> detalles) {
         this.detalles = detalles;
     }
 
     @Override
     public String toString() {
-        return "Entrada{" +
+        return "salida{" +
                 "id='" + id + '\'' +
                 ", fecha=" + fecha +
                 ", descripcion='" + descripcion + '\'' +

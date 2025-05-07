@@ -7,7 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import com.example.demo.model.Insumo;
+
+import com.example.demo.model.mongo.Insumo;
 import com.example.demo.service.InsumoService;
 
 @Controller
