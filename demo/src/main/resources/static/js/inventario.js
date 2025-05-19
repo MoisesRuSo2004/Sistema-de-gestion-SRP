@@ -10,7 +10,7 @@ async function obtenerInsumos() {
     }
 
     const insumos = await response.json();
-    console.log("Insumos obtenidos:", insumos); // Verificar los datos obtenidos
+    console.log("Insumos obtenidos:", insumos);
 
     const tbody = document.getElementById("tabla-insumos");
     tbody.innerHTML = ""; // Limpiamos el contenido
@@ -18,30 +18,69 @@ async function obtenerInsumos() {
     insumos.forEach((insumo) => {
       tbody.innerHTML += `
         <tr>
-          
           <td>${insumo.nombre}</td>
           <td>${insumo.stock}</td>
           <td>${insumo.unidadM}</td>
           <td>
-            <a href="/editar?id=${insumo.id}" onclick="editarInsumo(${insumo.id})" class="btn btn-warning btn-circle">
+            <a href="/editar?id=${
+              insumo.id
+            }" class="btn btn-primary btn-circle">
               <i class="fas fa-pencil-alt"></i>
             </a>
-            <a href="${insumo.id}" class="btn btn-danger btn-circle btn-eliminar" data-id="${insumo.id}">
+            <a href="#" class="btn btn-danger btn-circle btn-eliminar" data-id="${
+              insumo.id
+            }">
               <i class="fas fa-trash"></i>
             </a>
+            <button 
+              class="btn btn-success btn-circle btn-agregar-entrada" 
+              data-id="${insumo.id}" 
+              data-nombre="${encodeURIComponent(insumo.nombre)}">
+              <i class="fas fa-cart-plus"></i>
+            </button>
+            <bu 
+              class="btn btn-warning btn-circle btn-agregar-salida" 
+              data-id="${insumo.id}" 
+              data-nombre="${encodeURIComponent(insumo.nombre)}">
+              <i class="fas fa-arrow-right"></i>
+            </button>
           </td>
         </tr>
       `;
     });
 
-    // 💡 INICIALIZAR DataTables DESPUÉS DE CARGAR LOS DATOS
+    // Asignar evento a cada botón de agregar entrada
+    document.querySelectorAll(".btn-agregar-entrada").forEach((boton) => {
+      boton.addEventListener("click", function (e) {
+        e.preventDefault();
+        const id = this.getAttribute("data-id");
+        const nombre = this.getAttribute("data-nombre");
+
+        // Redirigir a la página de entradas-add con los parámetros
+        window.location.href = `/entradas-add?id=${id}&nombre=${nombre}`;
+      });
+    });
+
+    // Asignar evento a cada botón de agregar entrada
+    document.querySelectorAll(".btn-agregar-salida").forEach((boton) => {
+      boton.addEventListener("click", function (e) {
+        e.preventDefault();
+        const id = this.getAttribute("data-id");
+        const nombre = this.getAttribute("data-nombre");
+
+        // Redirigir a la página de entradas-add con los parámetros
+        window.location.href = `/salidas-add?id=${id}&nombre=${nombre}`;
+      });
+    });
+
+    // Inicializar DataTables después de cargar los datos
     $("#dataTable").DataTable({
-      destroy: true, // Elimina la instancia previa para evitar errores
+      destroy: true,
       responsive: true,
       autoWidth: false,
-      searching: true, // Habilita el buscador
-      paging: true, // Activa la paginación
-      ordering: true, // Habilita el ordenamiento de columnas
+      searching: true,
+      paging: true,
+      ordering: true,
       language: {
         search: "Buscar:",
         lengthMenu: "Mostrar _MENU_ registros",
@@ -59,9 +98,12 @@ async function obtenerInsumos() {
   }
 }
 
+// Función para editar insumo
 function editarInsumo(id) {
-  window.location.href = `editar.html?id=${id}`;
+  window.location.href = `/editar?id=${id}`;
 }
 
-// Llamada a la función para cargar los insumos al cargar la página
-obtenerInsumos();
+// Iniciar la carga de insumos cuando la página esté lista
+document.addEventListener("DOMContentLoaded", () => {
+  obtenerInsumos();
+});

@@ -14,6 +14,7 @@ public class Admin {
 
     private String usuario;
     private String contrasena;
+    private String correo;
 
     public Long getId() {
         return id;
@@ -37,6 +38,14 @@ public class Admin {
 
     public void setContrasena(final String contrasena) {
         this.contrasena = contrasena;
+    }
+
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(final String correo) {
+        this.correo = correo;
     }
 
 }

@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.demo.exception.StockInsuficienteException;
 import com.example.demo.model.mongo.DetalleSalida;
 import com.example.demo.model.mongo.Insumo;
 import com.example.demo.model.mongo.Salida;
@@ -28,6 +30,10 @@ public class SalidaService {
         return salidaRepository.findAll();
     }
 
+    public List<Salida> listarSalidasPaginadas(int page, int size) {
+        return salidaRepository.findAll(PageRequest.of(page, size)).getContent();
+    }
+
     // OBTENER ENTRADA POR ID
     public Optional<Salida> obtenerSalidaPorId(String id) {
         return salidaRepository.findById(id);
@@ -36,48 +42,32 @@ public class SalidaService {
     // GUARDAR NUEVA ENTRADA Y ACTUALIZAR STOCK DE INSUMOS
     @Transactional
     public Salida guardarSalida(Salida salida) {
-        // Establecer fecha actual si no viene establecida
+        // Establecer fecha si no viene
         if (salida.getFecha() == null) {
             salida.setFecha(LocalDate.now());
         }
 
-        // Procesar cada detalle de la entrada para actualizar el stock de insumos
-        if (salida.getDetalles() != null && !salida.getDetalles().isEmpty()) {
-            for (DetalleSalida detalle : salida.getDetalles()) {
-                actualizarStockInsumo(detalle);
+        for (DetalleSalida detalle : salida.getDetalles()) {
+            String id = detalle.getInsumoId();
+
+            Insumo insumo = insumoRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Insumo no encontrado: " + id));
+
+            int cantidadActual = insumo.getStock();
+            int cantidadSalida = detalle.getCantidad();
+
+            if (cantidadSalida > cantidadActual) {
+                throw new StockInsuficienteException("Stock insuficiente para el insumo \"" + insumo.getNombre()
+                        + "\". Stock actual:)" + cantidadActual);
             }
-        }
 
-        // Guardar la entrada
-        return salidaRepository.save(salida);
-    }
-
-    // Método privado para actualizar el stock del insumo
-    private void actualizarStockInsumo(DetalleSalida detalle) {
-        if (detalle.getInsumoId() == null) {
-            throw new RuntimeException("El detalle debe tener un ID de insumo válido");
-        }
-
-        Optional<Insumo> insumoOpt = insumoRepository.findById(detalle.getInsumoId());
-
-        if (insumoOpt.isPresent()) {
-            Insumo insumo = insumoOpt.get();
-
-            // Obtener valores actuales
-            int stockActual = insumo.getStock();
-            int nuevaCantidad = detalle.getCantidad();
-
-            // Calcular nuevo stock
-            int nuevoStock = stockActual - nuevaCantidad;
-
-            // Actualizar el insumo (solo el stock)
-            insumo.setStock(nuevoStock);
-
-            // Guardar el insumo actualizado
+            // Descontar stock
+            insumo.setStock(cantidadActual - cantidadSalida);
             insumoRepository.save(insumo);
-        } else {
-            throw new RuntimeException("No se encontró el insumo con ID: " + detalle.getInsumoId());
         }
+
+        // Guardar la salida en MongoDB
+        return salidaRepository.save(salida);
     }
 
     // ACTUALIZAR O EDITAR ENTRADA

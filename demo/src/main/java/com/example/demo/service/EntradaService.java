@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +27,10 @@ public class EntradaService {
     // LISTAR ENTRADA
     public List<Entrada> listarEntradas() {
         return entradaRepository.findAll();
+    }
+
+    public List<Entrada> listarEntradasPaginadas(int page, int size) {
+        return entradaRepository.findAll(PageRequest.of(page, size)).getContent();
     }
 
     // OBTENER ENTRADA POR ID

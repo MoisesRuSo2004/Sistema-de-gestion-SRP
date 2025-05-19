@@ -16,6 +16,7 @@ public class Entrada {
 
     // Constructor vacío
     public Entrada() {
+
     }
 
     // Constructor con campos básicos

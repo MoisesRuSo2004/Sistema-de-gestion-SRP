@@ -11,9 +11,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.model.mongo.DetalleEntrada;
 import com.example.demo.model.mongo.Entrada;
+import com.example.demo.repos.mongo.EntradaRepository;
 import com.example.demo.service.EntradaService;
 
 @RestController
@@ -23,10 +26,20 @@ public class EntradaController {
     @Autowired
     private EntradaService entradaService;
 
+    @Autowired
+    private EntradaRepository entradaRepository;
+
     // BTENER TODAS LAS ENTRADAS (GET)
+    // @GetMapping
+    // public List<Entrada> getAllEntradas() {
+    // return entradaService.listarEntradas();
+    // }
+
     @GetMapping
-    public List<Entrada> getAllEntradas() {
-        return entradaService.listarEntradas();
+    public List<Entrada> obtenerEntradasPaginadas(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return entradaService.listarEntradasPaginadas(page, size);
     }
 
     // OBTENER ENTRADA POR ID (GET)
@@ -43,13 +56,14 @@ public class EntradaController {
 
     // ACTUALIZAR ENTRADA (PUT)
     @PutMapping("/{id}")
-    public Entrada updateEntrada(@PathVariable String id, @RequestBody Entrada entrada) {
+    public Entrada updateEntrada(@PathVariable String id, @RequestBody Entrada entrada, DetalleEntrada detalleEntrada) {
         return entradaService.actualizarEntrada(entrada);
     }
 
     // ELIMINAR UN INSUMO (DELETE)
     @DeleteMapping("/{id}")
     public void deleteEntrada(@PathVariable String id) {
+        entradaRepository.deleteById(id);
         entradaService.eliminarEntrada(id);
     }
 

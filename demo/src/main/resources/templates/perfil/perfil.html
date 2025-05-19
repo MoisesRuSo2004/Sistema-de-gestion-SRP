@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html
+  lang="en"
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout/layout}"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <!--FAVICON-->
+    <link rel="icon" type="image/png" href="/img/icons8-coser-16.png" />
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Custom fonts for this template-->
+    <link
+      href="vendor/fontawesome-free/css/all.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+      rel="stylesheet"
+    />
+
+    <!-- Custom styles for this template-->
+    <link href="css/sb-admin-2.min.css" rel="stylesheet" />
+
+    <!--CSS PERSONALIZADO-->
+    <link rel="stylesheet" href="css/dashboard.css" />
+
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+  </head>
+  <body id="page-top">
+    <div layout:fragment="content">
+      <div class="container-fluid">
+        <!-- perfil.html -->
+        <div class="container-fluid px-4 py-4">
+          <h2 class="mb-4 text-primary font-weight-bold">Mi Perfil</h2>
+
+          <div class="row">
+            <!-- CARD PERFIL -->
+            <div class="col-md-4 mb-4">
+              <div class="card shadow border-left-primary">
+                <div class="card-body text-center">
+                  <img
+                    src="img/undraw_profile.svg"
+                    alt="Usuario"
+                    class="rounded-circle mb-3"
+                    width="120"
+                    height="120"
+                  />
+                  <h5
+                    class="card-title font-weight-bold text-dark"
+                    th:text="${admin.usuario}"
+                  ></h5>
+                  <p class="text-muted mb-1" th:text="${admin.correo}">
+                    admin@miempresa.com
+                  </p>
+                  <span class="badge badge-success">Administrador</span>
+                </div>
+              </div>
+            </div>
+            <!-- FORMULARIO DATOS -->
+            <div class="col-md-8">
+              <div class="card shadow mb-4 border-left-success">
+                <div class="card-header bg-white font-weight-bold text-success">
+                  Información personal
+                </div>
+                <div class="card-body">
+                  <form>
+                    <div class="form-group row">
+                      <label for="nombre" class="col-sm-3 col-form-label"
+                        >Nombre</label
+                      >
+                      <div class="col-sm-9">
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="nombre"
+                          th:value="${admin.usuario}"
+                          readonly
+                        />
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="correo" class="col-sm-3 col-form-label"
+                        >Correo</label
+                      >
+                      <div class="col-sm-9">
+                        <input
+                          type="email"
+                          class="form-control"
+                          id="correo"
+                          th:value="${admin.correo}"
+                          readonly
+                        />
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="rol" class="col-sm-3 col-form-label"
+                        >Rol</label
+                      >
+                      <div class="col-sm-9">
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="rol"
+                          value="Administrador"
+                          readonly
+                        />
+                      </div>
+                    </div>
+                    <div class="text-right">
+                      <a href="#" class="btn btn-primary"
+                        ><i class="fas fa-user-edit"></i> Editar Perfil</a
+                      >
+                      <a href="#" class="btn btn-danger"
+                        ><i class="fas fa-key"></i> Cambiar Contraseña</a
+                      >
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div layout:fragment="scripts">
+      <!-- Bootstrap core JavaScript-->
+      <script src="vendor/jquery/jquery.min.js"></script>
+      <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+      <!-- Core plugin JavaScript-->
+      <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+      <!-- Custom scripts for all pages-->
+      <script src="js/sb-admin-2.min.js"></script>
+    </div>
+  </body>
+</html>

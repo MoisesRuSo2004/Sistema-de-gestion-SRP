@@ -15,7 +15,7 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
 
-    <title>Entradas</title>
+    <title>Entradas - SDGDI</title>
 
     <!-- Custom fonts for this template -->
     <link
@@ -38,7 +38,7 @@
     />
     <!--CSS PERSONALIZADO-->
     <link rel="stylesheet" href="css/dashboard.css" />
-    <link rel="stylesheet" href="" />
+    <link rel="stylesheet" href="css/alerta-eliminar-entrada.css" />
 
     <meta name="_csrf" th:content="${_csrf.token}" />
     <meta name="_csrf_header" th:content="${_csrf.headerName}" />
@@ -57,12 +57,7 @@
             >
               <h1 class="h3 mb-0 text-gray-800">Entradas</h1>
 
-              <a
-                th:href="@{/entradas-add}"
-                class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
-                ><i class="fa fa-plus-circle fa-sm text-white-50"></i> Agregar
-                Entrada</a
-              >
+              
             </div>
             <p class="mb-5">
               Aquí podrás gestionar todas las entradas de manera eficiente.
@@ -109,7 +104,7 @@
             <div class="card shadow mb-4">
               <div class="card-header py-3">
                 <h6 class="m-0 font-weight-bold text-primary">
-                  Lista de Insumos
+                  Lista de Entradas
                 </h6>
               </div>
               <div class="card-body">
@@ -209,22 +204,23 @@
     </div>
 
     <div layout:fragment="scripts">
-      <!--SCRIPT PARA CONSUMIR LA API-->
-      <script src="/js/entradas.js"></script>
+  <!-- Bootstrap core JavaScript-->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-      <!-- Bootstrap core JavaScript-->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <!-- Core plugin JavaScript-->
+  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 
-    <!-- Core plugin JavaScript-->
-    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+  <!-- Custom scripts for all pages-->
+  <script src="js/sb-admin-2.min.js"></script>
 
-    <!-- Custom scripts for all pages-->
-    <script src="js/sb-admin-2.min.js"></script>
+  <!-- Page level plugins -->
+  <script src="vendor/datatables/jquery.dataTables.min.js"></script>
+  <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
-    <!-- Page level plugins -->
-    <script src="vendor/datatables/jquery.dataTables.min.js"></script>
-    <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
-    </div>
+  <!--SCRIPT PARA CONSUMIR LA API-->
+  <script src="/js/entradas.js"></script>
+  <script src="/js/eliminar-entrada.js"></script>
+</div>
   </body>
 </html>

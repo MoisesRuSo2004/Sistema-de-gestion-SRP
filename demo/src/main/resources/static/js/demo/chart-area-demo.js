@@ -34,18 +34,18 @@ var myLineChart = new Chart(ctx, {
   type: "line",
   data: {
     labels: [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
+      "2014",
+      "2015",
+      "2016",
+      "2017",
+      "2018",
+      "2019",
+      "2020",
+      "2021",
+      "2022",
+      "2023",
+      "2024",
+      "2025",
     ],
     datasets: [
       {
@@ -62,8 +62,7 @@ var myLineChart = new Chart(ctx, {
         pointHitRadius: 10,
         pointBorderWidth: 2,
         data: [
-          0, 10000, 5000, 15000, 10000, 20000, 15000, 25000, 20000, 30000,
-          25000, 40000,
+          0, 100, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000,
         ],
       },
     ],
@@ -100,7 +99,7 @@ var myLineChart = new Chart(ctx, {
             padding: 10,
             // Include a dollar sign in the ticks
             callback: function (value, index, values) {
-              return "$" + number_format(value);
+              return "" + number_format(value);
             },
           },
           gridLines: {

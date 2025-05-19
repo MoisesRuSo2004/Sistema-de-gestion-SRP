@@ -1,6 +1,9 @@
 package com.example.demo.config;
 
+import com.example.demo.security.CustomAuthenticationSuccessHandler;
 import com.example.demo.service.AdminDetailsService;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,6 +16,9 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfig {
 
+    @Autowired
+    private CustomAuthenticationSuccessHandler loginSuccessHandler;
+
     private final AdminDetailsService adminDetailsService;
 
     public SecurityConfig(AdminDetailsService adminDetailsService) {
@@ -23,16 +29,12 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/css/**", "/img/**", "/js/**").permitAll() // permitimos login y
-                                                                                               // recursos
-                        // públicos
-                        .anyRequest().authenticated() // el resto requiere autenticación
-                )
+                        .requestMatchers("/login", "/css/**", "/img/**", "/js/**").permitAll()
+                        .anyRequest().authenticated())
                 .formLogin(form -> form
-                        .loginPage("/login") // tu vista personalizada
-                        .defaultSuccessUrl("/dashboard", true)
+                        .loginPage("/login")
+                        .successHandler(loginSuccessHandler)
                         .permitAll())
-
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/login?logout")
@@ -42,15 +44,14 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // Para usar BCrypt (encriptar contraseñas)
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // Necesario para autenticación
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
     }
+
 }

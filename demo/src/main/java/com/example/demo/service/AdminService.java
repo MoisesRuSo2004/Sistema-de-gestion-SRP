@@ -18,10 +18,11 @@ public class AdminService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public Admin createAdmin(String usuario, String contrasena) {
+    public Admin createAdmin(String usuario, String contrasena, String correo) {
         Admin admin = new Admin();
         admin.setUsuario(usuario);
         admin.setContrasena(passwordEncoder.encode(contrasena));
+        admin.setCorreo(usuario + "admin@sistemadegestionsrp.com.co");
         return adminRepository.save(admin);
     }
 
@@ -35,7 +36,7 @@ public class AdminService {
 
     public void inicializarAdminPorDefecto() {
         if (!existsByUsuario("admin")) {
-            createAdmin("admin", "admin123");
+            createAdmin("admin", "admin123", "admin@sistemadegestionsrp.com.co");
             System.out.println("Administrador por defecto creado: admin/admin123");
         }
     }

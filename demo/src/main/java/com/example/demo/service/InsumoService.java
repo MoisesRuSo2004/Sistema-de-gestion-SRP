@@ -20,6 +20,11 @@ public class InsumoService {
         return insumoRepository.findAll();
     }
 
+    // OBTENER INSUMOS CON STOCK BAJO
+    public List<Insumo> obtenerInsumosConStockBajo() {
+        return insumoRepository.findByStockLessThan(10); // Cambia 10 por el valor que consideres bajo
+    }
+
     // OBTENER INSUMOS POR SU ID
     public Optional<Insumo> obtenerInsumoPorId(String id) {
         return insumoRepository.findById(id);

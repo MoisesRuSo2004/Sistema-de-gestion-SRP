@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +27,13 @@ public class InsumoController {
     @GetMapping
     public List<Insumo> getAllInsumos() {
         return insumoService.listarInsumos();
+    }
+
+    // OBTENER INSUMOS CON STOCK BAJO (GET)
+    @GetMapping("/stock-bajo")
+    public ResponseEntity<List<Insumo>> getInsumosConStockBajo() {
+        List<Insumo> criticos = insumoService.obtenerInsumosConStockBajo();
+        return ResponseEntity.ok(criticos);
     }
 
     // OBTENER INSUMOS POR ID (GET)
