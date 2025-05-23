@@ -22,28 +22,12 @@ async function obtenerInsumos() {
           <td>${insumo.stock}</td>
           <td>${insumo.unidadM}</td>
           <td>
-            <a href="/editar?id=${
-              insumo.id
-            }" class="btn btn-primary btn-circle">
+            <a href="/editar?id=${insumo.id}" class="btn btn-primary btn-circle">
               <i class="fas fa-pencil-alt"></i>
             </a>
-            <a href="#" class="btn btn-danger btn-circle btn-eliminar" data-id="${
-              insumo.id
-            }">
+            <a href="#" class="btn btn-danger btn-circle btn-eliminar" data-id="${insumo.id}">
               <i class="fas fa-trash"></i>
             </a>
-            <button 
-              class="btn btn-success btn-circle btn-agregar-entrada" 
-              data-id="${insumo.id}" 
-              data-nombre="${encodeURIComponent(insumo.nombre)}">
-              <i class="fas fa-cart-plus"></i>
-            </button>
-            <bu 
-              class="btn btn-warning btn-circle btn-agregar-salida" 
-              data-id="${insumo.id}" 
-              data-nombre="${encodeURIComponent(insumo.nombre)}">
-              <i class="fas fa-arrow-right"></i>
-            </button>
           </td>
         </tr>
       `;

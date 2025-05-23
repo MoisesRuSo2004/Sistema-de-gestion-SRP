@@ -4,6 +4,24 @@ document.addEventListener("DOMContentLoaded", () => {
   const overlay = document.getElementById("overlay");
   const btnCerrarAlerta = document.querySelector("#alertaExito .dismiss");
   const btnAceptarAlerta = document.querySelector("#alertaExito .track");
+  const campoCantidad = document.getElementById("cantidad");
+
+  // Crear banner para alerta stock bajo (puedes crear el div en HTML o dinámicamente aquí)
+  let alertaStockBajo = document.getElementById("alertaStockBajo");
+  if (!alertaStockBajo) {
+    alertaStockBajo = document.createElement("div");
+    alertaStockBajo.id = "alertaStockBajo";
+    alertaStockBajo.style.background = "#f8d7da"; // rojo claro
+    alertaStockBajo.style.color = "#842029";
+    alertaStockBajo.style.padding = "10px";
+    alertaStockBajo.style.margin = "10px 0";
+    alertaStockBajo.style.border = "1px solid #f5c2c7";
+    alertaStockBajo.style.borderRadius = "4px";
+    alertaStockBajo.style.display = "none";
+    alertaStockBajo.textContent =
+      "¡Atención! El stock ingresado es igual o inferior a 20.";
+    formulario.prepend(alertaStockBajo);
+  }
 
   // Extraer CSRF token y header desde las etiquetas meta
   const csrfToken = document
@@ -19,16 +37,26 @@ document.addEventListener("DOMContentLoaded", () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          [csrfHeader]: csrfToken, // Usamos el header dinámico
+          [csrfHeader]: csrfToken,
         },
         body: JSON.stringify(datosInsumo),
       });
 
-      if (!respuesta.ok) throw new Error(`Error HTTP: ${respuesta.status}`);
+      if (!respuesta.ok) {
+        if (respuesta.status === 409) {
+          // Error por nombre duplicado
+          const msg = await respuesta.text();
+          alert(`Error: ${msg}`);
+          return null;
+        } else {
+          throw new Error(`Error HTTP: ${respuesta.status}`);
+        }
+      }
 
       return await respuesta.json();
     } catch (error) {
       console.error("Error al crear el insumo:", error);
+      alert("Hubo un problema al guardar el insumo.");
       return null;
     }
   }
@@ -36,31 +64,43 @@ document.addEventListener("DOMContentLoaded", () => {
   formulario.addEventListener("submit", async (evento) => {
     evento.preventDefault();
 
+    alertaStockBajo.style.display = "none";
+    campoCantidad.classList.remove("border-danger"); // Quitar borde rojo previo
+
     if (!formulario.checkValidity()) {
       formulario.classList.add("was-validated");
       return;
     }
 
+    const stockIngresado = parseInt(campoCantidad.value, 10);
     const datosInsumo = {
       nombre: document.getElementById("nombre").value,
-      stock: parseInt(document.getElementById("cantidad").value, 10),
+      stock: stockIngresado,
       unidadM: document.getElementById("unidadM").value,
     };
+
+    // Si stock ≤ 20, mostrar alerta visual y borde rojo en campo
+    if (stockIngresado <= 20) {
+      alertaStockBajo.style.display = "block";
+      campoCantidad.classList.add("border-danger");
+    }
 
     const resultado = await crearInsumo(datosInsumo);
 
     if (resultado) {
       formulario.reset();
       formulario.classList.remove("was-validated");
+      alertaStockBajo.style.display = "none";
+      campoCantidad.classList.remove("border-danger");
       mostrarAlerta();
-    } else {
-      alert("Hubo un problema al guardar el insumo.");
     }
   });
 
   document.getElementById("btnLimpiar").addEventListener("click", () => {
     formulario.reset();
     formulario.classList.remove("was-validated");
+    alertaStockBajo.style.display = "none";
+    campoCantidad.classList.remove("border-danger");
   });
 
   function mostrarAlerta() {
@@ -76,9 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
     alertaExito.classList.add("d-none");
     alertaExito.style.display = "none";
 
-    if (ocultarAlerta) {
-      window.location.href = "/inventario";
-    }
+    window.location.href = "/inventario";
   }
 
   btnCerrarAlerta.addEventListener("click", ocultarAlerta);

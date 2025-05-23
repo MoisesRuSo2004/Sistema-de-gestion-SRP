@@ -12,214 +12,124 @@
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
-
     <title>Salidas - SDGDI</title>
 
-    <!-- Custom fonts for this template -->
+    <!-- Fonts and Styles -->
     <link
       href="vendor/fontawesome-free/css/all.min.css"
       rel="stylesheet"
       type="text/css"
     />
     <link
-      href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+      href="https://fonts.googleapis.com/css?family=Nunito:200,300,400,600,700,800,900"
       rel="stylesheet"
     />
-
-    <!-- Custom styles for this template -->
     <link href="css/sb-admin-2.min.css" rel="stylesheet" />
-
-    <!-- Custom styles for this page -->
     <link
       href="vendor/datatables/dataTables.bootstrap4.min.css"
       rel="stylesheet"
     />
-    <!--CSS PERSONALIZADO-->
     <link rel="stylesheet" href="css/dashboard.css" />
     <link rel="stylesheet" href="css/alerta-eliminar-salida.css" />
 
     <meta name="_csrf" th:content="${_csrf.token}" />
     <meta name="_csrf_header" th:content="${_csrf.headerName}" />
   </head>
+
   <body id="page-top">
-    <!-- Page Wrapper -->
-    <div id="wrapper">
-      <div layout:fragment="content">
-        <!-- End of Topbar -->
-
-          <!-- Begin Page Content -->
-          <div class="container-fluid">
-            <!-- Page Heading -->
-            <div
-              class="d-sm-flex align-items-center justify-content-between mb-4"
-            >
-              <h1 class="h3 mb-0 text-gray-800">Salidas</h1>
-
-            </div>
-            <p class="mb-5">
-              Aquí podrás gestionar todas las entradas de manera eficiente.
-              Registra nuevas compras, visualiza las entradas anteriores y
-              mantén el control del historial de insumos ingresados de forma
-              organizada. Usa la barra de búsqueda y los filtros para encontrar
-              rápidamente lo que necesitas.
-            </p>
-            <!-- Fondo oscuro -->
-            <div id="overlay"></div>
-            <!-- 🔔 ALERTA DE CONFIRMACIÓN -->
-            <div id="alertaConfirmacion" class="card d-none">
-              <button class="dismiss" type="button">×</button>
-              <div class="header">
-                <div class="image">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <g id="SVGRepo_iconCarrier">
-                      <path
-                        d="M12 9V13M12 17H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
-                        stroke="#000000"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      ></path>
-                    </g>
-                  </svg>
-                </div>
-                <div class="content">
-                  <span class="title">¿Eliminar insumo?</span>
-                  <p class="message">Esta acción no se puede deshacer.</p>
-                </div>
-                <div class="actions">
-                  <button class="track" type="button">Sí, eliminar</button>
-                  <button class="dismiss" type="button">Cancelar</button>
-                </div>
-              </div>
-            </div>
-
-            <!-- DataTales Example -->
-            <div class="card shadow mb-4">
-              <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">
-                  Lista De Salidas
-                </h6>
-              </div>
-              <div class="card-body">
-                <div class="table-responsive">
-                  <table
-                    class="table table-bordered"
-                    id="dataTable"
-                    width="100%"
-                    cellspacing="0"
-                  >
-                    <thead>
-                      <tr>
-                        <th>Nombre</th>
-                        <th>Fecha</th>
-                        <th>Descripción</th>
-                        <th>Cantidad</th>
-                        <th>Acciones</th>
-                      </tr>
-                    </thead>
-                    <tfoot>
-                      <tr>
-                        <th>Nombre</th>
-                        <th>Fecha</th>
-                        <th>Descripción</th>
-                        <th>Cantidas</th>
-                        <th>Acciones</th>
-                      </tr>
-                    </tfoot>
-                    <tbody id="tabla-salidas"></tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- /.container-fluid -->
+    <div id="wrapper" layout:fragment="content">
+      <div class="container-fluid">
+        <!-- Page Heading -->
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+          <h1 class="h3 mb-0 text-gray-800">Salidas</h1>
         </div>
-        <!-- End of Main Content -->
 
-        <!-- Footer -->
-        <footer class="sticky-footer bg-white">
-          <div class="container my-auto">
-            <div class="copyright text-center my-auto">
-              <span>Copyright &copy; Your Website 2020</span>
+        <p class="mb-3">
+          Aquí podrás gestionar todas las salidas de manera eficiente.
+        </p>
+
+        <div id="overlay"></div>
+
+        <!-- Alerta Confirmación -->
+        <div id="alertaConfirmacion" class="card d-none">
+          <button class="dismiss" type="button">×</button>
+          <div class="header">
+            <div class="image">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M12 9V13M12 17H12.01M21 12C21 16.9706 16.9706 21 12 21
+                       C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3
+                       C16.9706 3 21 7.02944 21 12Z"
+                  stroke="#000000"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </div>
+            <div class="content">
+              <span class="title">¿Eliminar insumo?</span>
+              <p class="message">Esta acción no se puede deshacer.</p>
+            </div>
+            <div class="actions">
+              <button class="track" type="button">Sí, eliminar</button>
+              <button class="dismiss" type="button">Cancelar</button>
             </div>
           </div>
-        </footer>
-        <!-- End of Footer -->
-      </div>
-      <!-- End of Content Wrapper -->
-    </div>
-    <!-- End of Page Wrapper -->
+        </div>
 
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-      <i class="fas fa-angle-up"></i>
-    </a>
-
-    <!-- Logout Modal-->
-    <div
-      class="modal fade"
-      id="logoutModal"
-      tabindex="-1"
-      role="dialog"
-      aria-labelledby="exampleModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-            <button
-              class="close"
-              type="button"
-              data-dismiss="modal"
-              aria-label="Close"
-            >
-              <span aria-hidden="true">×</span>
-            </button>
+        <!-- Tabla -->
+        <div class="card shadow mb-4">
+          <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Lista De Salidas</h6>
           </div>
-          <div class="modal-body">
-            Select "Logout" below if you are ready to end your current session.
-          </div>
-          <div class="modal-footer">
-            <button
-              class="btn btn-secondary"
-              type="button"
-              data-dismiss="modal"
-            >
-              Cancel
-            </button>
-            <a class="btn btn-primary" href="login.html">Logout</a>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table
+                class="table table-bordered"
+                id="dataTable"
+                width="100%"
+                cellspacing="0"
+              >
+                <thead>
+                  <tr>
+                    <th>Nombre</th>
+                    <th>Fecha</th>
+                    <th>Descripción</th>
+                    <th>Cantidad</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tfoot>
+                  <tr>
+                    <th>Nombre</th>
+                    <th>Fecha</th>
+                    <th>Descripción</th>
+                    <th>Cantidas</th>
+                    <th>Acciones</th>
+                  </tr>
+                </tfoot>
+                <tbody id="tabla-salidas"></tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
-      </div>
-          
     </div>
 
     <div layout:fragment="scripts">
-      <!--SCRIPT PARA CONSUMIR LA API-->
+      <script src="vendor/jquery/jquery.min.js"></script>
+      <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+      <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+      <script src="js/sb-admin-2.min.js"></script>
+      <script src="vendor/datatables/jquery.dataTables.min.js"></script>
+      <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
       <script src="/js/salidas.js"></script>
       <script src="/js/eliminar-salida.js"></script>
-
-      <!-- Bootstrap core JavaScript-->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Core plugin JavaScript-->
-    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-
-    <!-- Custom scripts for all pages-->
-    <script src="js/sb-admin-2.min.js"></script>
-
-    <!-- Page level plugins -->
-    <script src="vendor/datatables/jquery.dataTables.min.js"></script>
-    <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
     </div>
   </body>
 </html>

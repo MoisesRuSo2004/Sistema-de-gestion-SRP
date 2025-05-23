@@ -8,18 +8,16 @@ public class DetalleEntrada {
     private String insumoId; // ID único de detalle de entrada
     private String nombre;
     private int cantidad; // Stock actualizado
-    private String proveedor;
 
     // Constructor vacío
     public DetalleEntrada() {
     }
 
     // Constructor con parámetros
-    public DetalleEntrada(String insumoId, String nombre, int cantidad, String proveedor) {
+    public DetalleEntrada(String insumoId, String nombre, int cantidad) {
         this.insumoId = insumoId;
         this.nombre = nombre;
         this.cantidad = cantidad;
-        this.proveedor = proveedor;
     }
 
     // Getters y setters
@@ -47,21 +45,12 @@ public class DetalleEntrada {
         this.cantidad = cantidad;
     }
 
-    public String getProveedor() {
-        return proveedor;
-    }
-
-    public void setProveedor(String proveedor) {
-        this.proveedor = proveedor;
-    }
-
     @Override
     public String toString() {
         return "DetallesEntradas{" +
                 "insumoId='" + insumoId + '\'' +
                 ", cantidad=" + cantidad +
                 " nombre='" + nombre + '\'' +
-                ", proveedor='" + proveedor + '\'' +
                 '}';
     }
 }

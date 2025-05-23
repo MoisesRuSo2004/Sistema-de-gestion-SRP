@@ -71,10 +71,44 @@ public class SalidaService {
     }
 
     // ACTUALIZAR O EDITAR ENTRADA
-    public Salida actualizarSalida(Salida salida) {
-        // Aquí podríamos implementar la lógica para ajustar el inventario si se
-        // modifica una entrada existente
-        return salidaRepository.save(salida);
+    @Transactional
+    public Salida actualizarSalida(Salida salidaActualizada) {
+        // 1. Obtener la salida original
+        Salida salidaOriginal = salidaRepository.findById(salidaActualizada.getId())
+                .orElseThrow(() -> new RuntimeException("Salida no encontrada con ID: " + salidaActualizada.getId()));
+
+        // 2. Revertir stock con los detalles de la salida original (sumar)
+        if (salidaOriginal.getDetalles() != null) {
+            for (DetalleSalida detalleOriginal : salidaOriginal.getDetalles()) {
+                Insumo insumo = insumoRepository.findById(detalleOriginal.getInsumoId())
+                        .orElseThrow(
+                                () -> new RuntimeException("Insumo no encontrado: " + detalleOriginal.getInsumoId()));
+                insumo.setStock(insumo.getStock() + detalleOriginal.getCantidad());
+                insumoRepository.save(insumo);
+            }
+        }
+
+        // 3. Aplicar nueva salida (restar)
+        if (salidaActualizada.getDetalles() != null) {
+            for (DetalleSalida detalleNuevo : salidaActualizada.getDetalles()) {
+                Insumo insumo = insumoRepository.findById(detalleNuevo.getInsumoId())
+                        .orElseThrow(() -> new RuntimeException("Insumo no encontrado: " + detalleNuevo.getInsumoId()));
+
+                int stockActual = insumo.getStock();
+                int cantidadSalida = detalleNuevo.getCantidad();
+
+                if (cantidadSalida > stockActual) {
+                    throw new StockInsuficienteException("Stock insuficiente para el insumo \"" + insumo.getNombre()
+                            + "\". Stock actual: " + stockActual);
+                }
+
+                insumo.setStock(stockActual - cantidadSalida);
+                insumoRepository.save(insumo);
+            }
+        }
+
+        // 4. Actualizar la salida
+        return salidaRepository.save(salidaActualizada);
     }
 
     // ELIMINA ENTRADA

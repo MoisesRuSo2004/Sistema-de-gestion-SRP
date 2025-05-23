@@ -25,9 +25,9 @@ function renderizarNotificaciones() {
         </div>
         <div>
           <div class="small text-gray-500">${new Date().toLocaleDateString()}</div>
-          Stock crítico: <strong>${insumo.nombre}</strong> (${
-      insumo.stock
-    } unidades)
+          Stock crítico: <strong>${insumo.nombre}</strong> (${insumo.stock} ${
+      insumo.unidadM
+    })
         </div>
       `;
     contenedor.appendChild(alerta);

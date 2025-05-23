@@ -12,6 +12,7 @@ public class Entrada {
     private String id;
     private LocalDate fecha;
     private String descripcion;
+    private String proveedor;
     private List<DetalleEntrada> detalles; // Nueva propiedad para los detalles
 
     // Constructor vacío
@@ -20,9 +21,10 @@ public class Entrada {
     }
 
     // Constructor con campos básicos
-    public Entrada(LocalDate fecha, String descripcion) {
+    public Entrada(LocalDate fecha, String descripcion, String proveedor) {
         this.fecha = fecha;
         this.descripcion = descripcion;
+        this.proveedor = proveedor;
     }
 
     // Constructor con todos los campos
@@ -57,6 +59,14 @@ public class Entrada {
         this.descripcion = descripcion;
     }
 
+    public String getProveedor() {
+        return proveedor;
+    }
+
+    public void setProveedor(String proveedor) {
+        this.proveedor = proveedor;
+    }
+
     // Nuevos getters y setters para detalles
     public List<DetalleEntrada> getDetalles() {
         return detalles;
@@ -73,6 +83,7 @@ public class Entrada {
                 ", fecha=" + fecha +
                 ", descripcion='" + descripcion + '\'' +
                 ", detalles=" + detalles +
+                ", proveedor='" + proveedor + '\'' +
                 '}';
     }
 }

@@ -86,10 +86,38 @@ public class EntradaService {
     }
 
     // ACTUALIZAR O EDITAR ENTRADA
-    public Entrada actualizarEntrada(Entrada entrada) {
-        // Aquí podríamos implementar la lógica para ajustar el inventario si se
-        // modifica una entrada existente
-        return entradaRepository.save(entrada);
+    @Transactional
+    public Entrada actualizarEntrada(Entrada entradaActualizada) {
+        // 1. Buscar la entrada original
+        Entrada entradaOriginal = entradaRepository.findById(entradaActualizada.getId())
+                .orElseThrow(() -> new RuntimeException("Entrada no encontrada con ID: " + entradaActualizada.getId()));
+
+        // 2. Revertir stock de insumos según la entrada original
+        if (entradaOriginal.getDetalles() != null) {
+            for (DetalleEntrada detalleOriginal : entradaOriginal.getDetalles()) {
+                Optional<Insumo> insumoOpt = insumoRepository.findById(detalleOriginal.getInsumoId());
+                if (insumoOpt.isPresent()) {
+                    Insumo insumo = insumoOpt.get();
+                    insumo.setStock(insumo.getStock() - detalleOriginal.getCantidad());
+                    insumoRepository.save(insumo);
+                }
+            }
+        }
+
+        // 3. Aplicar el nuevo stock según la entrada actualizada
+        if (entradaActualizada.getDetalles() != null) {
+            for (DetalleEntrada detalleNuevo : entradaActualizada.getDetalles()) {
+                Optional<Insumo> insumoOpt = insumoRepository.findById(detalleNuevo.getInsumoId());
+                if (insumoOpt.isPresent()) {
+                    Insumo insumo = insumoOpt.get();
+                    insumo.setStock(insumo.getStock() + detalleNuevo.getCantidad());
+                    insumoRepository.save(insumo);
+                }
+            }
+        }
+
+        // 4. Guardar la entrada actualizada
+        return entradaRepository.save(entradaActualizada);
     }
 
     // ELIMINA ENTRADA

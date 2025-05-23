@@ -12,3 +12,9 @@
     transform: translateY(0);
   }
 }
+
+#sugerencias {
+  z-index: 10;
+  max-height: 200px;
+  overflow-y: auto;
+}

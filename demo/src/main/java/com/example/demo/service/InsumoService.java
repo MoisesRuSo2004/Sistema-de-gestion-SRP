@@ -30,8 +30,27 @@ public class InsumoService {
         return insumoRepository.findById(id);
     }
 
+    // BUSCAR INSUMOS POR NOMBRE (para autocompletado)
+    public List<Insumo> buscarInsumosPorNombre(String nombre) {
+        return insumoRepository.findByNombreContainingIgnoreCase(nombre);
+    }
+
     // GUARDAR NUEVO INSUMO
     public Insumo guardarInsumo(Insumo insumo) {
+        // Normalizar nombre (minusculas + trim)
+        String nombreNormalizado = insumo.getNombre().trim().toLowerCase();
+
+        // Verificar si ya existe un insumo con ese nombre
+        Optional<Insumo> existente = insumoRepository.findAll().stream()
+                .filter(i -> i.getNombre() != null &&
+                        i.getNombre().trim().toLowerCase().equals(nombreNormalizado))
+                .findFirst();
+
+        if (existente.isPresent()) {
+            throw new IllegalArgumentException("Ya existe un insumo con el nombre: " + insumo.getNombre());
+        }
+
+        // Continuar con el guardado si no existe
         return insumoRepository.save(insumo);
     }
 

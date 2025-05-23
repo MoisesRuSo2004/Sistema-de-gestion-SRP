@@ -137,26 +137,7 @@
               <i class="fa fa-bars"></i>
             </button>
 
-            <!-- Topbar Search -->
-            <form
-              class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search"
-            >
-              <div class="input-group">
-                <input
-                  type="text"
-                  class="form-control bg-light border-0 small"
-                  placeholder="Buscar..."
-                  aria-label="Search"
-                  aria-describedby="basic-addon2"
-                />
-                <div class="input-group-append">
-                  <button class="btn btn-primary" type="button">
-                    <i class="fas fa-search fa-sm"></i>
-                  </button>
-                </div>
-              </div>
-            </form>
-
+            
             <!-- Topbar Navbar -->
             <ul class="navbar-nav ml-auto">
               <!-- Nav Item - Search Dropdown (Visible Only XS) -->
@@ -221,7 +202,7 @@
                   <div id="alertas-stock">
                     <div class="dropdown-item text-muted">Cargando...</div>
                   </div>
-                  <a href="#" id="ver-mas" class="dropdown-item text-center small text-gray-500">Ver más...</a>
+                  <a th:href="@{/notificaciones}" id="ver-mas" class="dropdown-item text-center small text-gray-500">Ver más...</a>
 
                 </div>
               </li>
@@ -289,7 +270,7 @@
         <footer class="sticky-footer bg-white">
           <div class="container my-auto">
             <div class="copyright text-center my-auto">
-              <span>Copyright &copy; Your Website 2021</span>
+              <span>&copy; 2025 SRP - Gestión de Inventario | La Señora Piedad</span>
             </div>
           </div>
         </footer>

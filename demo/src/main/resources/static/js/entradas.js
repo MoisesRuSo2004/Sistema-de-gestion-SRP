@@ -1,17 +1,16 @@
-const apiUrl = "http://localhost:8080/api/entradas"; // URL de la API
+const apiUrl = "http://localhost:8080/api/entradas";
 
-// 💡 INICIALIZAR DataTables con carga paginada desde el servidor
 $(document).ready(function () {
   $("#dataTable").DataTable({
-    serverSide: true, // Carga datos desde el servidor en cada página
-    processing: true, // Muestra un indicador de carga
-    responsive: true, // Tabla responsiva
+    serverSide: true,
+    processing: true,
+    responsive: true,
     autoWidth: false,
     paging: true,
     ordering: true,
     searching: true,
-    pageLength: 10, // Número de registros por página
-    lengthMenu: [10, 20, 50, 100], // Opciones de paginación
+    pageLength: 5,
+    lengthMenu: [5, 20, 50, 100],
     language: {
       search: "Buscar:",
       lengthMenu: "Mostrar _MENU_ registros",
@@ -25,42 +24,41 @@ $(document).ready(function () {
     },
     ajax: async function (data, callback) {
       try {
-        // Calcular página y tamaño
         const page = Math.floor(data.start / data.length);
         const size = data.length;
 
-        // Fetch de la API con paginación
         const response = await fetch(`${apiUrl}?page=${page}&size=${size}`);
         if (!response.ok) {
           throw new Error(`Error al obtener entradas: ${response.status}`);
         }
 
-        const entradas = await response.json();
-        console.log("Datos cargados:", entradas);
+        const json = await response.json();
+        const entradas = json.data;
 
-        // Formatear datos para el DataTable
-        const formattedData = entradas
-          .map((entrada) =>
-            entrada.detalles.map((detalle) => ({
-              nombre: detalle.nombre,
-              fecha: entrada.fecha,
-              descripcion: entrada.descripcion,
-              cantidad: detalle.cantidad,
-              acciones: `
-              <a href="/entradas-edit?id=${detalle.insumoId}" onclick="editarEntrada('${entrada.id}')" class="btn btn-warning btn-circle">
+        const formattedData = entradas.map((entrada) => {
+          const nombres = entrada.detalles.map((d) => d.nombre).join(", ");
+          const cantidades = entrada.detalles.map((d) => d.cantidad).join(", ");
+
+          return {
+            nombre: nombres,
+            fecha: entrada.fecha,
+            descripcion: entrada.descripcion,
+            cantidad: cantidades,
+            acciones: `
+              <a href="/entradas-edit?id=${entrada.id}" onclick="editarEntrada('${entrada.id}')" class="btn btn-primary btn-circle">
                 <i class="fas fa-pencil-alt"></i>
               </a>
               <a href="#" class="btn btn-danger btn-circle btn-eliminar" data-id="${entrada.id}">
                 <i class="fas fa-trash"></i>
-              </a>`,
-            }))
-          )
-          .flat(); // Aplanar la estructura anidada
+              </a>
+            `,
+          };
+        });
 
         callback({
           draw: data.draw,
-          recordsTotal: 7500, // Ajusta el total si lo tienes
-          recordsFiltered: 7500,
+          recordsTotal: json.recordsTotal,
+          recordsFiltered: json.recordsFiltered,
           data: formattedData,
         });
       } catch (error) {
@@ -68,10 +66,10 @@ $(document).ready(function () {
       }
     },
     columns: [
-      { data: "nombre", title: "Nombre" },
+      { data: "nombre", title: "Nombre(s)" },
       { data: "fecha", title: "Fecha" },
       { data: "descripcion", title: "Descripción" },
-      { data: "cantidad", title: "Cantidad" },
+      { data: "cantidad", title: "Cantidad(es)" },
       {
         data: "acciones",
         title: "Acciones",
@@ -82,7 +80,6 @@ $(document).ready(function () {
   });
 });
 
-// ✅ Guardar el ID de la entrada en localStorage
 function editarEntrada(idEntrada) {
   localStorage.setItem("entradaIdEditar", idEntrada);
 }

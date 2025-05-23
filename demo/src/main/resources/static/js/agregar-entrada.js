@@ -4,181 +4,202 @@ document.addEventListener("DOMContentLoaded", () => {
   const overlay = document.getElementById("overlay");
   const btnCerrarAlerta = document.querySelector("#alertaExito .dismiss");
   const btnAceptarAlerta = document.querySelector("#alertaExito .track");
+
   const inputNombre = document.getElementById("nombre");
   const inputInsumoId = document.getElementById("insumoIdSeleccionado");
+  const inputCantidad = document.getElementById("cantidad");
+  const inputUnidadM = document.getElementById("unidadM");
   const listaSugerencias = document.getElementById("sugerencias");
+  const tablaInsumos = document.getElementById("tabla-insumos");
 
-  // CSRF
-  const csrfToken = document
-    .querySelector('meta[name="_csrf"]')
-    ?.getAttribute("content");
-  const csrfHeader = document
-    .querySelector('meta[name="_csrf_header"]')
-    ?.getAttribute("content");
+  const insumosAgregados = [];
 
-  // Debug para ver si estamos cargando correctamente
-  console.log("Script de agregar-entrada cargado correctamente");
-  console.log("CSRF Token:", csrfToken);
+  const csrfToken = document.querySelector('meta[name="_csrf"]')?.content;
+  const csrfHeader = document.querySelector(
+    'meta[name="_csrf_header"]'
+  )?.content;
 
-  // Buscar insumos por texto
-  const params = new URLSearchParams(window.location.search);
-  const idURL = params.get("id");
-  const nombreURL = params.get("nombre")
-    ? decodeURIComponent(params.get("nombre"))
-    : "";
+  // Bloquear cantidad al inicio
+  inputCantidad.disabled = true;
 
-  console.log("Parámetros URL:", { idURL, nombreURL });
-
-  if (idURL && nombreURL) {
-    inputInsumoId.value = idURL;
-    inputNombre.value = nombreURL;
-    inputNombre.readOnly = true;
-    console.log("Formulario prellenado con:", { id: idURL, nombre: nombreURL });
-  }
-
-  // Prellenar fecha con la de hoy
+  // Establecer fecha actual
   const fechaInput = document.getElementById("fecha");
   if (fechaInput) {
-    const hoy = new Date().toISOString().split("T")[0];
-    fechaInput.value = hoy;
-    console.log("Fecha establecida:", hoy);
+    fechaInput.value = new Date().toISOString().split("T")[0];
   }
 
-  // Limpiar sugerencias si se hace clic fuera
+  // Autocompletado con fetch
+  inputNombre.addEventListener("input", async () => {
+    const texto = inputNombre.value.trim();
+
+    inputInsumoId.value = "";
+    inputUnidadM.value = "";
+    inputCantidad.disabled = true;
+
+    if (texto.length < 2) {
+      listaSugerencias.innerHTML = "";
+      return;
+    }
+
+    try {
+      const respuesta = await fetch(
+        `/api/insumos/buscar?nombre=${encodeURIComponent(texto)}`
+      );
+      const sugerencias = await respuesta.json();
+
+      listaSugerencias.innerHTML = "";
+
+      if (sugerencias.length > 0) {
+        sugerencias.forEach((insumo) => {
+          const item = document.createElement("button");
+          item.classList.add("list-group-item", "list-group-item-action");
+          item.textContent = insumo.nombre;
+
+          item.addEventListener("click", () => {
+            inputNombre.value = insumo.nombre;
+            inputInsumoId.value = insumo.id || insumo._id;
+            inputUnidadM.value = insumo.unidadM;
+            inputUnidadM.readOnly = true;
+            inputCantidad.disabled = false;
+            listaSugerencias.innerHTML = "";
+          });
+
+          listaSugerencias.appendChild(item);
+        });
+      } else {
+        const item = document.createElement("div");
+        item.classList.add("list-group-item");
+        item.textContent = "Sin resultados";
+        listaSugerencias.appendChild(item);
+      }
+    } catch (err) {
+      console.error("Error al obtener sugerencias:", err);
+    }
+  });
+
+  // Cerrar sugerencias al hacer clic fuera
   document.addEventListener("click", (e) => {
-    if (!e.target.closest("#nombre")) {
+    if (!e.target.closest("#nombre") && !e.target.closest("#sugerencias")) {
       listaSugerencias.innerHTML = "";
     }
   });
 
-  // Crear entrada
-  async function crearEntrada(datosEntrada) {
+  // ➕ Agregar insumo a la tabla
+  // ➕ Agregar insumo a la tabla
+  document.getElementById("btnAgregarInsumo").addEventListener("click", () => {
+    const id = inputInsumoId.value;
+    const nombre = inputNombre.value.trim();
+    const cantidad = parseInt(inputCantidad.value, 10);
+
+    if (!id || !nombre || isNaN(cantidad) || cantidad <= 0) {
+      alert("Selecciona un insumo válido y una cantidad positiva.");
+      if (!id) inputNombre.classList.add("is-invalid");
+      if (isNaN(cantidad) || cantidad <= 0)
+        inputCantidad.classList.add("is-invalid");
+      return;
+    }
+
+    // ❌ Verificar si el insumo ya fue agregado
+    const yaExiste = insumosAgregados.some((i) => i.insumoId === id);
+    if (yaExiste) {
+      alert("Este insumo ya fue agregado.");
+      return;
+    }
+
+    inputNombre.classList.remove("is-invalid");
+    inputCantidad.classList.remove("is-invalid");
+
+    insumosAgregados.push({ insumoId: id, nombre, cantidad });
+
+    const fila = document.createElement("tr");
+    fila.innerHTML = `
+    <td>${nombre}</td>
+    <td>${cantidad}</td>
+    <td><button class="btn btn-sm btn-danger btnEliminar">Eliminar</button></td>
+  `;
+    tablaInsumos.appendChild(fila);
+
+    fila.querySelector(".btnEliminar").addEventListener("click", () => {
+      tablaInsumos.removeChild(fila);
+      const index = insumosAgregados.findIndex((i) => i.insumoId === id);
+      if (index !== -1) insumosAgregados.splice(index, 1);
+    });
+
+    inputNombre.value = "";
+    inputInsumoId.value = "";
+    inputUnidadM.value = "";
+    inputCantidad.value = "";
+    inputCantidad.disabled = true;
+  });
+
+  // 📤 Enviar entrada al backend
+  formulario.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    formulario.classList.add("was-validated");
+
+    if (!formulario.checkValidity()) return;
+
+    if (insumosAgregados.length === 0) {
+      alert("Debes agregar al menos un insumo.");
+      return;
+    }
+
+    const datosEntrada = {
+      fecha: fechaInput.value,
+      proveedor: document.getElementById("proveedor").value,
+      descripcion: document.getElementById("descripcion").value,
+      detalles: insumosAgregados,
+    };
+
     try {
-      console.log("Intentando crear entrada con datos:", datosEntrada);
+      const headers = { "Content-Type": "application/json" };
+      if (csrfToken && csrfHeader) headers[csrfHeader] = csrfToken;
 
-      const headers = {
-        "Content-Type": "application/json",
-      };
-
-      // Añadir token CSRF si está disponible
-      if (csrfToken && csrfHeader) {
-        headers[csrfHeader] = csrfToken;
-      }
-
-      const respuesta = await fetch("http://localhost:8080/api/entradas", {
+      const res = await fetch("http://localhost:8080/api/entradas", {
         method: "POST",
-        headers: headers,
+        headers,
         body: JSON.stringify(datosEntrada),
       });
 
-      console.log("Respuesta del servidor:", respuesta.status);
+      if (!res.ok) throw new Error(await res.text());
 
-      if (!respuesta.ok) {
-        const errorText = await respuesta.text();
-        console.error("Error del servidor:", errorText);
-        throw new Error(`Error HTTP: ${respuesta.status} - ${errorText}`);
-      }
-
-      const data = await respuesta.json();
-      console.log("Entrada creada exitosamente:", data);
-      return data;
-    } catch (error) {
-      console.error("Error al crear la entrada:", error);
-      return null;
-    }
-  }
-
-  // Submit
-  if (formulario) {
-    console.log("Formulario encontrado correctamente: formEntrada");
-    formulario.addEventListener("submit", async (evento) => {
-      evento.preventDefault();
-      console.log("Formulario enviado");
-
-      if (!formulario.checkValidity()) {
-        console.log("Formulario no válido");
-        formulario.classList.add("was-validated");
-        return;
-      }
-
-      console.log("Formulario válido, preparando datos");
-
-      // Verificar que tenemos el ID del insumo
-      if (!inputInsumoId.value) {
-        alert("Debe seleccionar un insumo válido");
-        return;
-      }
-
-      const datosEntrada = {
-        fecha: document.getElementById("fecha").value,
-        descripcion: document.getElementById("descripcion").value,
-        detalles: [
-          {
-            insumoId: inputInsumoId.value,
-            nombre: inputNombre.value,
-            cantidad: parseInt(document.getElementById("cantidad").value, 10),
-            proveedor: document.getElementById("proveedor").value,
-          },
-        ],
-      };
-
-      console.log("Enviando datos:", datosEntrada);
-
-      const resultado = await crearEntrada(datosEntrada);
-
-      if (resultado) {
-        console.log("Entrada creada exitosamente");
-        formulario.reset();
-        formulario.classList.remove("was-validated");
-        inputInsumoId.value = "";
-        mostrarAlerta();
-      } else {
-        console.error("Error al guardar la entrada");
-        alert(
-          "Hubo un problema al guardar la Entrada. Revisa la consola para más detalles."
-        );
-      }
-    });
-  } else {
-    console.error("No se encontró el formulario con ID 'formEntrada'");
-  }
-
-  // Botón Limpiar
-  const btnLimpiar = document.getElementById("btnLimpiar");
-  if (btnLimpiar) {
-    btnLimpiar.addEventListener("click", () => {
+      mostrarAlerta();
       formulario.reset();
-      formulario.classList.remove("was-validated");
-      inputInsumoId.value = "";
-      listaSugerencias.innerHTML = "";
-      console.log("Formulario limpiado");
-    });
-  }
+      tablaInsumos.innerHTML = "";
+      insumosAgregados.length = 0;
+      inputCantidad.disabled = true;
+    } catch (err) {
+      console.error("Error al guardar entrada:", err);
+      alert("No se pudo guardar la entrada. Revisa la consola.");
+    }
+  });
+
+  // 🧹 Botón Limpiar
+  document.getElementById("btnLimpiar").addEventListener("click", () => {
+    formulario.reset();
+    formulario.classList.remove("was-validated");
+    inputInsumoId.value = "";
+    inputUnidadM.value = "";
+    listaSugerencias.innerHTML = "";
+    inputCantidad.disabled = true;
+    tablaInsumos.innerHTML = "";
+    insumosAgregados.length = 0;
+  });
 
   function mostrarAlerta() {
-    console.log("Mostrando alerta de éxito");
     overlay.style.display = "block";
     alertaExito.classList.remove("d-none");
     alertaExito.style.display = "flex";
-
     setTimeout(ocultarAlerta, 5000);
   }
 
   function ocultarAlerta() {
-    console.log("Ocultando alerta");
     overlay.style.display = "none";
     alertaExito.classList.add("d-none");
     alertaExito.style.display = "none";
-
-    console.log("Redirigiendo a /entradas");
     window.location.href = "/inventario";
   }
 
-  if (btnCerrarAlerta) {
-    btnCerrarAlerta.addEventListener("click", ocultarAlerta);
-  }
-
-  if (btnAceptarAlerta) {
-    btnAceptarAlerta.addEventListener("click", ocultarAlerta);
-  }
+  btnCerrarAlerta?.addEventListener("click", ocultarAlerta);
+  btnAceptarAlerta?.addEventListener("click", ocultarAlerta);
 });

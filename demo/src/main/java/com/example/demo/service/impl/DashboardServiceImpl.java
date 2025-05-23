@@ -39,7 +39,7 @@ public class DashboardServiceImpl implements DashboardService {
                 int totalInsumos = (int) insumoRepository.count(); // o cast si devuelve long
                 int totalEntradas = calcularTotalEntradas();
                 int totalSalidas = calcularTotalSalidas();
-                int insumosBajoStock = insumoRepository.findByStockLessThan(30).size();
+                int insumosBajoStock = insumoRepository.findByStockLessThan(1).size();
                 Map<String, Integer> entradasPorMes = calcularEntradasPorMes();
                 Map<String, Integer> salidasPorMes = calcularSalidasPorMes();
 

@@ -1,9 +1,14 @@
 package com.example.demo.controller;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,10 +41,19 @@ public class EntradaController {
     // }
 
     @GetMapping
-    public List<Entrada> obtenerEntradasPaginadas(
+    public Map<String, Object> obtenerEntradasPaginadas(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        return entradaService.listarEntradasPaginadas(page, size);
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by("fecha").descending());
+        Page<Entrada> paginaEntradas = entradaRepository.findAll(pageable);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("data", paginaEntradas.getContent());
+        response.put("recordsTotal", paginaEntradas.getTotalElements());
+        response.put("recordsFiltered", paginaEntradas.getTotalElements()); // si no hay filtros
+
+        return response;
     }
 
     // OBTENER ENTRADA POR ID (GET)

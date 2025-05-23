@@ -12,216 +12,145 @@
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
-
     <title>Inventario - SDGDI</title>
 
-    <!--FAVICON-->
+    <!-- Favicon -->
     <link rel="icon" type="image/png" href="/img/icons8-coser-16.png" />
 
-    <!-- Custom fonts for this template -->
+    <!-- Fonts -->
     <link
       href="vendor/fontawesome-free/css/all.min.css"
       rel="stylesheet"
       type="text/css"
     />
     <link
-      href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+      href="https://fonts.googleapis.com/css?family=Nunito:200,300,400,600,700,800,900"
       rel="stylesheet"
     />
 
-    <!-- Custom styles for this template -->
+    <!-- Styles -->
     <link href="css/sb-admin-2.min.css" rel="stylesheet" />
-
-    <!-- Custom styles for this page -->
     <link
       href="vendor/datatables/dataTables.bootstrap4.min.css"
       rel="stylesheet"
     />
-    <!--CSS PERSONALIZADO-->
     <link rel="stylesheet" href="css/dashboard.css" />
     <link rel="stylesheet" href="css/alerta-eliminar-insumo.css" />
 
+    <!-- CSRF -->
     <meta name="_csrf" th:content="${_csrf.token}" />
     <meta name="_csrf_header" th:content="${_csrf.headerName}" />
   </head>
   <body id="page-top">
     <div layout:fragment="content">
+      <div class="container-fluid">
+        <!-- Page Heading -->
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+          <h1 class="h3 mb-0 text-gray-800">Gestión del Inventario</h1>
 
-          <!-- Begin Page Content -->
-          <div class="container-fluid">
-            <!-- Page Heading -->
-            <div
-              class="d-sm-flex align-items-center justify-content-between mb-4"
+          <div class="d-flex flex-wrap">
+            <a
+              th:href="@{/agregar}"
+              class="btn btn-sm btn-primary shadow-sm mr-2 mb-2"
             >
-              <h1 class="h3 mb-0 text-gray-800">Gestion del Inventario</h1>
+              <i class="fa fa-plus-circle fa-sm text-white-50"></i> Agregar
+              Insumo
+            </a>
+            <a
+              th:href="@{/entradas-add}"
+              class="btn btn-sm btn-success shadow-sm mr-2 mb-2"
+            >
+              <i class="fa fa-plus-circle fa-sm text-white-50"></i> Nueva
+              Entrada
+            </a>
+            <a
+              th:href="@{/salidas-add}"
+              class="btn btn-sm btn-warning shadow-sm mb-2"
+            >
+              <i class="fa fa-plus-circle fa-sm text-white-50"></i> Nueva Salida
+            </a>
+          </div>
+        </div>
 
-              <a
-                th:href="@{/agregar}"
-                class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
-                ><i class="fa fa-plus-circle fa-sm text-white-50"></i> Agregar
-                Nuevo Insumo</a
+        <!-- Fondo oscuro -->
+        <div id="overlay"></div>
+
+        <!-- Alerta de confirmación -->
+        <div id="alertaConfirmacion" class="card d-none">
+          <button class="dismiss" type="button">×</button>
+          <div class="header">
+            <div class="image">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
               >
+                <path
+                  d="M12 9V13M12 17H12.01M21 12C21 16.97 16.97 21 12 21C7.03 21 3 16.97 3 12C3 7.03 7.03 3 12 3C16.97 3 21 7.03 21 12Z"
+                  stroke="#000"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
             </div>
-            <p class="mb-5">
-              Aquí podrás gestionar todos los insumos de manera eficiente.
-              Agrega nuevos productos, edita la información existente y mantén
-              el control de tu inventario de forma organizada. Usa la barra de
-              búsqueda y los filtros para encontrar rápidamente lo que
-              necesitas.
-            </p>
-            <!-- Fondo oscuro -->
-            <div id="overlay"></div>
-            <!-- 🔔 ALERTA DE CONFIRMACIÓN -->
-            <div id="alertaConfirmacion" class="card d-none">
-              <button class="dismiss" type="button">×</button>
-              <div class="header">
-                <div class="image">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <g id="SVGRepo_iconCarrier">
-                      <path
-                        d="M12 9V13M12 17H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
-                        stroke="#000000"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      ></path>
-                    </g>
-                  </svg>
-                </div>
-                <div class="content">
-                  <span class="title">¿Eliminar insumo?</span>
-                  <p class="message">Esta acción no se puede deshacer.</p>
-                </div>
-                <div class="actions">
-                  <button class="track" type="button">Sí, eliminar</button>
-                  <button class="dismiss" type="button">Cancelar</button>
-                </div>
-              </div>
+            <div class="content">
+              <span class="title">¿Eliminar insumo?</span>
+              <p class="message">Esta acción no se puede deshacer.</p>
             </div>
-
-            <!-- DataTales Example -->
-            <div class="card shadow mb-4">
-              <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">
-                  Lista de Insumos
-                </h6>
-              </div>
-              <div class="card-body">
-                <div class="table-responsive">
-                  <table
-                    class="table table-bordered"
-                    id="dataTable"
-                    width="100%"
-                    cellspacing="0"
-                  >
-                    <thead>
-                      <tr>
-                        
-                        <th>Nombre del Insumo</th>
-                        <th>Stock</th>
-                        <th>Unidad de Medida</th>
-                        <th>Acciones</th>
-                      </tr>
-                    </thead>
-                    <tfoot>
-                      <tr>
-                        <th>Nombre del Insumo</th>
-                        <th>Stock</th>
-                        <th>Unidad de Medida</th>
-                        <th>Acciones</th>
-                      </tr>
-                    </tfoot>
-                    <tbody id="tabla-insumos"></tbody>
-                  </table>
-                </div>
-              </div>
+            <div class="actions">
+              <button class="track" type="button">Sí, eliminar</button>
+              <button class="dismiss" type="button">Cancelar</button>
             </div>
           </div>
-          <!-- /.container-fluid -->
         </div>
-        <!-- End of Main Content -->
 
-        <!-- Footer -->
-        <footer class="sticky-footer bg-white">
-          <div class="container my-auto">
-            <div class="copyright text-center my-auto">
-              <span>Copyright &copy; Your Website 2020</span>
+        <!-- Tabla de insumos -->
+        <div class="card shadow mb-4">
+          <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Lista de Insumos</h6>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table
+                class="table table-bordered"
+                id="dataTable"
+                width="100%"
+                cellspacing="0"
+              >
+                <thead>
+                  <tr>
+                    <th>Nombre del Insumo</th>
+                    <th>Stock</th>
+                    <th>Unidad de Medida</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tfoot>
+                  <tr>
+                    <th>Nombre del Insumo</th>
+                    <th>Stock</th>
+                    <th>Unidad de Medida</th>
+                    <th>Acciones</th>
+                  </tr>
+                </tfoot>
+                <tbody id="tabla-insumos"></tbody>
+              </table>
             </div>
-          </div>
-        </footer>
-        <!-- End of Footer -->
-      </div>
-      <!-- End of Content Wrapper -->
-    </div>
-    <!-- End of Page Wrapper -->
-
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-      <i class="fas fa-angle-up"></i>
-    </a>
-
-    <!-- Logout Modal-->
-    <div
-      class="modal fade"
-      id="logoutModal"
-      tabindex="-1"
-      role="dialog"
-      aria-labelledby="exampleModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-            <button
-              class="close"
-              type="button"
-              data-dismiss="modal"
-              aria-label="Close"
-            >
-              <span aria-hidden="true">×</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            Select "Logout" below if you are ready to end your current session.
-          </div>
-          <div class="modal-footer">
-            <button
-              class="btn btn-secondary"
-              type="button"
-              data-dismiss="modal"
-            >
-              Cancel
-            </button>
-            <a class="btn btn-primary" href="login.html">Logout</a>
           </div>
         </div>
       </div>
     </div>
+    <!-- Scripts -->
     <div layout:fragment="scripts">
-      <!-- Bootstrap core JavaScript-->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Core plugin JavaScript-->
-    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-
-    <!-- Custom scripts for all pages-->
-    <script src="js/sb-admin-2.min.js"></script>
-
-    <!-- Page level plugins -->
-    <script src="vendor/datatables/jquery.dataTables.min.js"></script>
-    <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
-
-    <!--SCRIPT PARA CONSUMIR LA API DE LA VISTA INVENTARIO-->
-    <script src="/js/inventario.js"></script>
-    <script src="/js/eliminar-insumo.js"></script>
+      <script src="vendor/jquery/jquery.min.js"></script>
+      <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+      <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+      <script src="js/sb-admin-2.min.js"></script>
+      <script src="vendor/datatables/jquery.dataTables.min.js"></script>
+      <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+      <script src="/js/inventario.js"></script>
+      <script src="/js/eliminar-insumo.js"></script>
     </div>
   </body>
 </html>
