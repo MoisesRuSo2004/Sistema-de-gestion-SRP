@@ -85,7 +85,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // ➕ Agregar insumo a la tabla
-  // ➕ Agregar insumo a la tabla
   document.getElementById("btnAgregarInsumo").addEventListener("click", () => {
     const id = inputInsumoId.value;
     const nombre = inputNombre.value.trim();

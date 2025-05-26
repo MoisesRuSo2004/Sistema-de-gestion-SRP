@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <td>${detalle.nombre}</td>
         <td>${detalle.cantidad}</td>
         <td>
-          <button type="button" class="btn btn-warning btn-sm btn-editar" data-index="${index}">
+          <button type="button" class="btn btn-primary btn-sm btn-editar" data-index="${index}">
             <i class="fas fa-edit"></i>
           </button>
           <button type="button" class="btn btn-danger btn-sm btn-eliminar" data-index="${index}">

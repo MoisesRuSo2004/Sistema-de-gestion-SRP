@@ -116,7 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
     alertaExito.classList.add("d-none");
     alertaExito.style.display = "none";
 
-    window.location.href = "/inventario";
+    window.location.href = "/agregar";
   }
 
   btnCerrarAlerta.addEventListener("click", ocultarAlerta);

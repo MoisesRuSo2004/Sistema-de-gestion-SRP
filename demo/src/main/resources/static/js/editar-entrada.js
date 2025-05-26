@@ -2,12 +2,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const formulario = document.getElementById("formEntrada");
   const inputNombre = document.getElementById("nombre");
   const inputInsumoId = document.getElementById("insumoIdSeleccionado");
-  const inputUnidadM = document.getElementById("unidadM");
   const inputCantidad = document.getElementById("cantidad");
   const inputProveedor = document.getElementById("proveedor");
   const alertaExito = document.getElementById("alertaExito");
   const overlay = document.getElementById("overlay");
   const tablaInsumosBody = document.getElementById("tabla-insumos");
+  const listaSugerencias = document.getElementById("sugerencias");
 
   const csrfToken = document
     .querySelector('meta[name="_csrf"]')
@@ -57,10 +57,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
       fila.innerHTML = `
         <td>${detalle.nombre}</td>
-        <td>${detalle.unidadM || ""}</td>
         <td>${detalle.cantidad}</td>
         <td>
-          <button type="button" class="btn btn-warning btn-sm btn-editar" data-index="${index}" title="Editar">
+          <button type="button" class="btn btn-primary btn-sm btn-editar" data-index="${index}" title="Editar">
             <i class="fas fa-edit"></i>
           </button>
           <button type="button" class="btn btn-danger btn-sm btn-eliminar" data-index="${index}" title="Eliminar">
@@ -102,7 +101,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const detalle = detallesEntrada[index];
     inputNombre.value = detalle.nombre;
     inputInsumoId.value = detalle.insumoId;
-    inputUnidadM.value = detalle.unidadM || "";
     inputCantidad.value = detalle.cantidad;
     //inputProveedor.value = detalle.proveedor || "";
 
@@ -114,7 +112,6 @@ document.addEventListener("DOMContentLoaded", () => {
   function resetFormulario() {
     inputNombre.value = "";
     inputInsumoId.value = "";
-    inputUnidadM.value = "";
     inputCantidad.value = "";
     //inputProveedor.value = "";
     indiceEditando = -1;
@@ -126,7 +123,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const nombre = inputNombre.value.trim();
     const insumoId = inputInsumoId.value;
     const cantidad = parseInt(inputCantidad.value, 10);
-    const unidadM = inputUnidadM.value.trim();
     const proveedor = inputProveedor.value.trim();
 
     if (!nombre || !insumoId || isNaN(cantidad) || cantidad <= 0) {
@@ -138,7 +134,6 @@ document.addEventListener("DOMContentLoaded", () => {
       insumoId,
       nombre,
       cantidad,
-      unidadM,
       proveedor,
     };
 
@@ -236,6 +231,57 @@ document.addEventListener("DOMContentLoaded", () => {
   if (btnAceptarAlerta)
     btnAceptarAlerta.addEventListener("click", ocultarAlerta);
 
-  // Carga la entrada al inicio
+  // Autocompletado con fetch
+  inputNombre.addEventListener("input", async () => {
+    const texto = inputNombre.value.trim();
+
+    inputInsumoId.value = "";
+    inputCantidad.disabled = true;
+
+    if (texto.length < 2) {
+      listaSugerencias.innerHTML = "";
+      return;
+    }
+
+    try {
+      const respuesta = await fetch(
+        `/api/insumos/buscar?nombre=${encodeURIComponent(texto)}`
+      );
+      const sugerencias = await respuesta.json();
+
+      listaSugerencias.innerHTML = "";
+
+      if (sugerencias.length > 0) {
+        sugerencias.forEach((insumo) => {
+          const item = document.createElement("button");
+          item.classList.add("list-group-item", "list-group-item-action");
+          item.textContent = insumo.nombre;
+
+          item.addEventListener("click", () => {
+            inputNombre.value = insumo.nombre;
+            inputInsumoId.value = insumo.id || insumo._id;
+            inputCantidad.disabled = false;
+            listaSugerencias.innerHTML = "";
+          });
+
+          listaSugerencias.appendChild(item);
+        });
+      } else {
+        const item = document.createElement("div");
+        item.classList.add("list-group-item");
+        item.textContent = "Sin resultados";
+        listaSugerencias.appendChild(item);
+      }
+    } catch (err) {
+      console.error("Error al obtener sugerencias:", err);
+    }
+  });
+
+  // Cerrar sugerencias al hacer clic fuera
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest("#nombre") && !e.target.closest("#sugerencias")) {
+      listaSugerencias.innerHTML = "";
+    }
+  });
   cargarEntrada(entradaId);
 });

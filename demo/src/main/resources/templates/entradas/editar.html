@@ -141,20 +141,6 @@
                       ></div>
                     </div>
 
-                    <!-- Unidad de medida -->
-                    <div class="col-3 mb-5">
-                      <label for="unidadMedida" class="form-label"
-                        >Unidad M:</label
-                      >
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="unidadM"
-                        name="unidadM"
-                        readonly
-                      />
-                    </div>
-
                     <!-- Cantidad -->
                     <div class="col-md-4">
                       <label for="cantidad" class="form-label required"
@@ -183,17 +169,35 @@
                         <i class="fas fa-plus mr-1"></i> Agregar
                       </button>
                     </div>
-                    <!-- Enlace para agregar nuevo insumo -->
-                    <div
-                      class="col-md-10 d-flex align-items-end"
-                      id="nuevoInsumoContainer"
-                      style="display: none"
+                  </div>
+                </div>
+              </div>
+              <!-- SECCIÓN 3: LISTA DE INSUMOS AGREGADOS -->
+              <div class="card3 shadow mb-4">
+                <div class="card-header py-3">
+                  <h6 class="m-0 font-weight-bold text-primary">
+                    Lista de Insumos
+                  </h6>
+                </div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table
+                      class="table table-bordered"
+                      id="tablaInsumos"
+                      width="100%"
+                      cellspacing="0"
                     >
-                      <a th:href="@{/agregar}" class="btn-block">
-                        <i class=""></i>¿No encuentras el insumo? ¡Crea uno
-                        nuevo!
-                      </a>
-                    </div>
+                      <thead>
+                        <tr>
+                          <th>Nombre</th>
+                          <th>Cantidad</th>
+                          <th>Acciones</th>
+                        </tr>
+                      </thead>
+                      <tbody id="tabla-insumos">
+                        <!-- Aquí se cargarán dinámicamente los insumos seleccionados -->
+                      </tbody>
+                    </table>
                   </div>
                 </div>
               </div>
@@ -271,35 +275,6 @@
                 </button>
               </div>
             </form>
-            <!-- SECCIÓN 3: LISTA DE INSUMOS AGREGADOS -->
-            <div class="card3 shadow mb-4">
-              <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">
-                  Lista de Insumos
-                </h6>
-              </div>
-              <div class="card-body">
-                <div class="table-responsive">
-                  <table
-                    class="table table-bordered"
-                    id="tablaInsumos"
-                    width="100%"
-                    cellspacing="0"
-                  >
-                    <thead>
-                      <tr>
-                        <th>Nombre</th>
-                        <th>Cantidad</th>
-                        <th>Acciones</th>
-                      </tr>
-                    </thead>
-                    <tbody id="tabla-insumos">
-                      <!-- Aquí se cargarán dinámicamente los insumos seleccionados -->
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>

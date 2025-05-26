@@ -21,7 +21,7 @@ public class ReportePdfGenerator {
 
             // Título
             Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18);
-            Paragraph title = new Paragraph("Reporte De Insumos", titleFont);
+            Paragraph title = new Paragraph("Reporte", titleFont);
             title.setAlignment(Element.ALIGN_CENTER);
             document.add(title);
 
